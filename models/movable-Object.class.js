@@ -3,8 +3,7 @@ class MovableObject extends DraweableObject {
   speed = 0.15;
 
   otherDirection = false;
-  offsetY = 100;
-  offsetX = 70;
+
   energie = 100;
   lastHit = 0;
 
@@ -59,24 +58,9 @@ class MovableObject extends DraweableObject {
 
 
   iscolliding(obj) {
-    let thisX, thisY, thisWidth, thisHeight;
-    if (this instanceof Character) {
-      thisX = this.x + this.offsetX / 2;
-      thisY = this.y + this.offsetY - 20;
-      thisWidth = this.width - this.offsetX;
-      thisHeight = this.height - this.offsetY;
-    } else {
-      thisX = this.x;
-      thisY = this.y;
-      thisWidth = this.width;
-      thisHeight = this.height;
-    }
-    let objX = obj.x;
-    let objY = obj.y;
-    let objWidth = obj.width;
-    let objHeight = obj.height;
-
-    return (thisX + thisWidth) >= objX && thisX <= (objX + objWidth) &&
-      (thisY + thisHeight) >= objY && thisY <= (objY + objHeight);
+   return this.x + this.width - this.offset.right > obj.x +obj.offset.left &&
+      this.y + this.height -this.offset.bottom > obj.y + obj.offset.top &&
+      this.x + this.offset.left < obj.x + obj.width-obj.offset.right &&
+      this.y+ this.offset.top < obj.y + obj.height -obj.offset.bottom;
   }
 }

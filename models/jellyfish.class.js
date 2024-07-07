@@ -2,6 +2,13 @@ class JellyFish extends MovableObject {
     imgNr = 1;
     world;
     movingDown = true;
+
+    offset ={
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right:0
+    }
     IMGS_WALKING = [
         `img/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png`,
         `img/2.Enemy/2 Jelly fish/Regular damage/Lila 2.png`,
@@ -17,7 +24,6 @@ class JellyFish extends MovableObject {
         this.speed = 0.45 + Math.random() * 0.25;
         this.animate();
         this.changeUpAndDown();
-
     }
 
     animate() {

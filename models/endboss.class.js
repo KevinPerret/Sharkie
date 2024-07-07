@@ -1,6 +1,13 @@
 class Endboss extends MovableObject {
     world;
     imgNr = 1;
+
+    offset = {
+        top: 220,
+        bottom: 120,
+        left: 10,
+        right: 10
+    }
     IMGS_INTRODUCE = [
         `img/2.Enemy/3 Final Enemy/1.Introduce/1.png`,
         `img/2.Enemy/3 Final Enemy/1.Introduce/2.png`,
@@ -32,7 +39,7 @@ class Endboss extends MovableObject {
 
     constructor() {
         super();
-        this.loadImage( `img/2.Enemy/3 Final Enemy/1.Introduce/1.png`);
+        this.loadImage(`img/2.Enemy/3 Final Enemy/1.Introduce/1.png`);
         this.loadImages(this.IMGS_INTRODUCE);
         this.loadImages(this.IMGS_FLOATING);
         this.height = 480;
@@ -44,20 +51,20 @@ class Endboss extends MovableObject {
     }
 
     animate() {
-        let i =0;
+        let i = 0;
         let firstContact = false;
         setInterval(() => {
-          
-            if (this.world.character.x >= 1300 && !firstContact ) {
+
+            if (this.world.character.x >= 4000 && !firstContact) {
                 this.playAnimation(this.IMGS_INTRODUCE);
                 i++;
                 if (i == 10) {
-                    firstContact = true; 
+                    firstContact = true;
                 }
-            } else if ( firstContact) {  
-                this.playAnimation(this.IMGS_FLOATING); 
-            } 
-        }, 1000/10);
+            } else if (firstContact) {
+                this.playAnimation(this.IMGS_FLOATING);
+            }
+        }, 1000 / 10);
 
     }
 

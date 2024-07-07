@@ -4,6 +4,14 @@ class PufferFisch extends MovableObject {
     movingLeft = true;
     startX; // To store the initial x position
     range = 300; // Define th
+
+    offset ={
+        top: 0,
+        bottom: 25,
+        left: 0,
+        right:0
+    }
+
     IMGS_IDLE = ['img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim2.png',
         'img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim3.png',

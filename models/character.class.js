@@ -6,6 +6,14 @@ class Character extends MovableObject {
     swimmingSound = new Audio('audio/swimShort.mp3');
     moving = false;
     isShooting = false;
+
+    offset ={
+        top: 95,
+        bottom: 40,
+        left: 30,
+        right: 30
+    }
+
     IMGS_IDLE = ['img/1.Sharkie/1.IDLE/1.png',
         'img/1.Sharkie/1.IDLE/2.png',
         'img/1.Sharkie/1.IDLE/3.png',
