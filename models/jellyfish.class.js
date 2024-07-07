@@ -22,7 +22,7 @@ class JellyFish extends MovableObject {
            this.playAnimation(this.IMGS_WALKING) 
             
         }, 150);
-        this.moveLeft();
+        this.moveUp();
    
     }
   

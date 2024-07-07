@@ -1,9 +1,9 @@
-const level1 = new Level(
+let level1= new Level(
     [
-        new PufferFisch(),
-        new PufferFisch(),
-        new PufferFisch(),
-        new JellyFish(),
+        new PufferFisch(200,0),
+        new PufferFisch(300,0),
+        new PufferFisch(400,0),
+        new JellyFish(500,0),
         new Endboss ()
     ],
 

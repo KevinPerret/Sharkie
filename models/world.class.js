@@ -1,13 +1,16 @@
 class World {
     character = new Character();
     level = level1;
-   
+    statusbarLife = new StatusBarLife();
+    statusbarCoins = new StatusBarCoin();
+    statusbarPoison = new StatusBarPoison();
+    bubble = [];
     ctx;
     canvas;
     keyboard;
     cameraX = -0;
     backgroundSound = new Audio('audio/deepSeaBackground.mp3');
-    
+
 
     constructor(canvas, keyboard, backgroundSound) {
         this.ctx = canvas.getContext('2d');
@@ -15,10 +18,37 @@ class World {
         this.keyboard = keyboard;
         this.draw();
         this.setWorld();
+        this.run();
         this.backgroundSound = backgroundSound;
-   
-      
+
+
     }
+
+
+    run() {
+        setInterval(() => {
+            this.checkBubbeles();
+            this.checkCollision();
+        }, 200);
+    }
+
+    checkBubbeles() {
+        if (this.keyboard.SPACE) {
+            let bubble = new Bubbles(this.character.x + 100 +this.cameraX, this.character.y + 100);
+     
+            this.bubble.push(bubble);
+
+        }
+    }
+    checkCollision() {
+        this.level.enemies.forEach(enemy => {
+            if (this.character.iscolliding(enemy)) {
+                this.character.hit();
+                this.statusbarLife.setPercent(this.character.energie);
+            }
+        });
+    }
+
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach(e => {
@@ -31,16 +61,15 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
         this.ctx.translate(this.cameraX, 0);
-
         this.addObjectToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
         this.addObjectToMap(this.level.enemies);
-
         this.ctx.translate(-this.cameraX, 0);
-
-
+        this.addToMap(this.statusbarLife);
+        this.addToMap(this.statusbarCoins);
+        this.addToMap(this.statusbarPoison);
+        this.addObjectToMap(this.bubble);
         requestAnimationFrame(() => this.draw());
     }
 
@@ -51,13 +80,12 @@ class World {
     }
 
     addToMap(mo) {
-        if(mo.otherDirection) {
-            this.ctx.save();
-            this.ctx.scale(-1, 1);
-            this.ctx.drawImage(mo.img, -mo.x - mo.width, mo.y, mo.width, mo.height);
-            this.ctx.restore();
+        if (mo.otherDirection) {
+            mo.drawMirrored(this.ctx);
+            mo.drawRectMirrored(this.ctx);
         } else {
-        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+            mo.draw(this.ctx);
+            mo.drawRect(this.ctx);
         }
     }
 }

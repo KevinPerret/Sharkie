@@ -6,13 +6,12 @@ let keyboard = new Keyboard();
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas,keyboard);
-
-    console.log(world);
 }
 
 window.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
         keyboard.SPACE = true;
+        event.preventDefault(); 
     }
     if (e.code === "ArrowUp") {
         keyboard.UP = true;
@@ -26,12 +25,12 @@ window.addEventListener("keydown", (e) => {
     if (e.code === "ArrowRight") {
         keyboard.RIGHT = true;
     }
-    console.log(e.code);
 });
 
 window.addEventListener("keyup", (e) => {
     if (e.code === "Space") {
         keyboard.SPACE = false;
+        event.preventDefault(); 
     }
     if (e.code === "ArrowUp") {
         keyboard.UP = false;
@@ -45,5 +44,10 @@ window.addEventListener("keyup", (e) => {
     if (e.code === "ArrowRight") {
         keyboard.RIGHT = false;
     }
-    console.log(e.code);
 });
+
+function startGame() {
+    document.getElementById('startscreen').style.display = 'none';
+   
+    init();
+}

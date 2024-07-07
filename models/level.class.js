@@ -3,9 +3,9 @@ class Level  {
     backgroundObjects;
     endboss;
     levelEndX = 1440;
-    constructor(enemies, backgroundObjects, endboss) {
+    constructor(enemies, backgroundObjects) {
         this.enemies = enemies;
         this.backgroundObjects = backgroundObjects;
-        this.endboss = endboss;
+      
     }
 }

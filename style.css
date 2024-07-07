@@ -1,9 +1,76 @@
-canvas{
+canvas {
     background-color: black;
+    display: block;
 }
 
-body{
+#startscreen {
+    position: absolute;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
+    gap: 24px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    background-image: url(img/backgroundImg.jpg);
+    color: white;
+    background-position: center;
+    background-size: cover;
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    box-sizing: border-box;
+    height: 100dvh;
+    width: 100dvw;
+    overflow: hidden;
+    background-image: url(img/backgroundImg.jpg);
+    color: white;
+    background-position: center;
+    background-size: cover;
+  
+}
+.startBtn{
+    width: 200px;
+}
+
+.controlerBtn{
+    width: 200px;
+}
+
+img{
+    cursor: pointer;
+}
+
+@font-face {
+    font-family: 'Luckiest Guy';
+    src: url('img/5.Font/Luckiest_Guy/') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@media only screen and (max-width: 760px) {
+    #startscreen {
+        width: 100%;
+    }
+    canvas {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-height: 480px) {
+    #startscreen {
+        height: 100vh;
+    }
+    canvas {
+        height: 100vh;
+    }
 }
