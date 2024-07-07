@@ -4,5 +4,5 @@ RIGHT;
 UP;
 DOWN;
 SPACE;
-
+D;
 }

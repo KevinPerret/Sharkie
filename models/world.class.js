@@ -8,7 +8,7 @@ class World {
     ctx;
     canvas;
     keyboard;
-    cameraX = -0;
+    cameraX = 0;
     backgroundSound = new Audio('audio/deepSeaBackground.mp3');
 
 
@@ -27,18 +27,22 @@ class World {
 
     run() {
         setInterval(() => {
-            this.checkBubbeles();
+            this.checkBubbles();
             this.checkCollision();
-        }, 200);
+        }, 100);
     }
 
-    checkBubbeles() {
-        if (this.keyboard.SPACE) {
-            let bubble = new Bubbles(this.character.x + 100 +this.cameraX, this.character.y + 100);
-     
-            this.bubble.push(bubble);
-
+    checkBubbles() {
+        if (this.keyboard.SPACE && !this.character.isShooting) {
+           this,this.character.animateShooting();
         }
+    }
+
+    createBubble() {
+        let xoffset = this.character.otherDirection ? -40 : 150;
+        let bubble = new Bubbles(this.character.x + xoffset + this.cameraX, this.character.y + 100,this.character.otherDirection);
+            this.bubble.push(bubble);
+            this.coins--;
     }
     checkCollision() {
         this.level.enemies.forEach(enemy => {
@@ -61,6 +65,7 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
         this.ctx.translate(this.cameraX, 0);
         this.addObjectToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
@@ -73,6 +78,7 @@ class World {
         requestAnimationFrame(() => this.draw());
     }
 
+ 
     addObjectToMap(object) {
         object.forEach(o => {
             this.addToMap(o)

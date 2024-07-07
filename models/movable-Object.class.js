@@ -1,28 +1,28 @@
 class MovableObject extends DraweableObject {
- 
+
   speed = 0.15;
- 
+
   otherDirection = false;
   offsetY = 100;
   offsetX = 70;
   energie = 100;
-  lastHit = 0;  
- 
-  
+  lastHit = 0;
 
-  
+
+
+
   hit() {
     let currentTime = new Date().getTime();
     if (currentTime - this.lastHit >= 1000) { // 1000 Millisekunden = 1 Sekunde
-        this.energie -= 20;
-        if (this.energie < 0) {
-            this.energie = 0;
-        }
-        this.lastHit = currentTime; // Aktualisiere den Zeitstempel des letzten Treffers
+      this.energie -= 20;
+      if (this.energie < 0) {
+        this.energie = 0;
+      }
+      this.lastHit = currentTime; // Aktualisiere den Zeitstempel des letzten Treffers
     }
-}
+  }
 
-  isHurt(){
+  isHurt() {
     let timePassed = new Date().getTime() - this.lastHit;
     return timePassed < 1000;
   }
@@ -31,7 +31,8 @@ class MovableObject extends DraweableObject {
     return this.energie == 0;
   }
 
- 
+
+
   playAnimation(IMGS) {
     let i = this.imgNr % IMGS.length;
     let path = IMGS[i];
@@ -40,27 +41,20 @@ class MovableObject extends DraweableObject {
   }
 
   moveRight() {
-    setInterval(() => {
-      this.x += this.speed;
-    }, 1000 / 60);
+
+    this.x += this.speed;
   }
 
   moveLeft() {
-    setInterval(() => {
-      this.x -= this.speed;
-    }, 1000 / 60);
+    this.x -= this.speed;
   }
 
   moveDown() {
-    setInterval(() => {
-      this.y += this.speed;
-    }, 1000 / 60);
+    this.y += this.speed;
   }
 
   moveUp() {
-    setInterval(() => {
-      this.y -= this.speed;
-    }, 1000 / 60);
+    this.y -= this.speed;
   }
 
 

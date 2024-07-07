@@ -5,13 +5,13 @@ let keyboard = new Keyboard();
 
 function init() {
     canvas = document.getElementById('canvas');
-    world = new World(canvas,keyboard);
+    world = new World(canvas, keyboard);
 }
 
 window.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
         keyboard.SPACE = true;
-        event.preventDefault(); 
+        event.preventDefault();
     }
     if (e.code === "ArrowUp") {
         keyboard.UP = true;
@@ -25,12 +25,15 @@ window.addEventListener("keydown", (e) => {
     if (e.code === "ArrowRight") {
         keyboard.RIGHT = true;
     }
+    if (e.code === "KeyD") {
+        keyboard.D = true;
+    }
 });
 
 window.addEventListener("keyup", (e) => {
     if (e.code === "Space") {
         keyboard.SPACE = false;
-        event.preventDefault(); 
+        event.preventDefault();
     }
     if (e.code === "ArrowUp") {
         keyboard.UP = false;
@@ -44,10 +47,13 @@ window.addEventListener("keyup", (e) => {
     if (e.code === "ArrowRight") {
         keyboard.RIGHT = false;
     }
+    if (e.code === "KeyD") {
+        keyboard.D = false;
+    }
 });
 
 function startGame() {
     document.getElementById('startscreen').style.display = 'none';
-   
+
     init();
 }
