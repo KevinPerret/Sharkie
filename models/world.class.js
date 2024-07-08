@@ -27,17 +27,23 @@ class World {
 
     run() {
         setInterval(() => {
-            this.checkBubbles();
+            this.checkShooting();
             this.checkCollision();
+            this.checkMeele();
         }, 100);
     }
 
-    checkBubbles() {
+    checkShooting() {
         if (this.keyboard.SPACE && !this.character.isShooting) {
             this, this.character.animateShooting();
         }
     }
 
+    checkMeele() {
+        if (this.keyboard.D && !this.character.isAttacking) {
+            this, this.character.animateMeeleAttack();
+        }
+    }
     createBubble() {
         let xoffset = this.character.otherDirection ? -40 : 150;
         let bubble = new Bubbles(this.character.x + xoffset + this.cameraX, this.character.y + 100, this.character.otherDirection);

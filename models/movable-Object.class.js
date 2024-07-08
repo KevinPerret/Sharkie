@@ -13,7 +13,7 @@ class MovableObject extends DraweableObject {
 
   hit(enemy) {
     let currentTime = new Date().getTime();
-    if (currentTime - this.lastHit >= 1000) {
+    if (currentTime - this.lastHit >= 1000 && !this.iframes) {
       this.energie -= 10;
       if (this.energie < 0) {
         this.energie = 0;
@@ -34,13 +34,12 @@ class MovableObject extends DraweableObject {
 
   addPoison() {
     let currentTime = new Date().getTime();
-    if (currentTime - this.lastHitPoison >= 1000) {
+    if (currentTime - this.lastHitPoison >= 1000 && !this.iframes) {
       this.poisonLevel += 10;
       if (this.poisonLevel > 100) {
         this.poisonLevel = 100;
       }
       this.lastHitPoison = currentTime;
-      console.log(this.poisonLevel);
     }
   }
 
@@ -55,6 +54,7 @@ class MovableObject extends DraweableObject {
     this.img = this.imgCache[path];
     this.imgNr++;
   }
+  
 
   moveRight() {
 
