@@ -6,8 +6,9 @@ class Character extends MovableObject {
     swimmingSound = new Audio('audio/swimShort.mp3');
     moving = false;
     isShooting = false;
-
-    offset ={
+    sleeping = false;
+    sleepTimerRunning = false;
+    offset = {
         top: 95,
         bottom: 40,
         left: 30,
@@ -72,6 +73,30 @@ class Character extends MovableObject {
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png'
     ]
 
+    IMGS_POISON = ['img/1.Sharkie/5.Hurt/1.Poisoned/1.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/2.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/3.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/4.png',
+        'img/1.Sharkie/5.Hurt/1.Poisoned/5.png'
+    ]
+
+    IMGS_SLEEP =['img/1.Sharkie/2.Long_IDLE/i1.png',
+        'img/1.Sharkie/2.Long_IDLE/i2.png',
+        'img/1.Sharkie/2.Long_IDLE/i3.png',
+        'img/1.Sharkie/2.Long_IDLE/i4.png',
+        'img/1.Sharkie/2.Long_IDLE/i5.png',
+        'img/1.Sharkie/2.Long_IDLE/i6.png',
+        'img/1.Sharkie/2.Long_IDLE/i7.png',
+        'img/1.Sharkie/2.Long_IDLE/i8.png',
+        'img/1.Sharkie/2.Long_IDLE/i9.png',
+        'img/1.Sharkie/2.Long_IDLE/i10.png',
+        'img/1.Sharkie/2.Long_IDLE/i11.png',
+        'img/1.Sharkie/2.Long_IDLE/i12.png',
+        'img/1.Sharkie/2.Long_IDLE/i13.png',
+        'img/1.Sharkie/2.Long_IDLE/i14.png'
+    ]
+
+
     constructor() {
         super().loadImage('img/1.Sharkie/1.IDLE/1.png');
         this.loadImages(this.IMGS_SWIM);
@@ -79,6 +104,8 @@ class Character extends MovableObject {
         this.loadImages(this.IMGS_SHOCKED);
         this.loadImages(this.IMGS_DEAD);
         this.loadImages(this.IMGS_SHOOT);
+        this.loadImages(this.IMGS_POISON);
+        this.loadImages(this.IMGS_SLEEP);
         this.height = 200;
         this.width = 200;
         this.x = 200;
@@ -90,43 +117,115 @@ class Character extends MovableObject {
 
     moveChar() {
         this.moving = false;
-        setInterval(() => {
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX ) {
-                this.x += this.speed;
-                this.otherDirection = false;
-                this.moving = true;
-            } else if (this.world.keyboard.LEFT && this.x > -200) {
-                this.x -= this.speed;
-                this.otherDirection = true;
-                this.moving = true;
-            } else if (this.world.keyboard.UP && this.y > -80) {
-                this.y -= this.speed;
-                this.moving = true;
-            } else if (this.world.keyboard.DOWN && this.y < 300) {
-                this.y += this.speed;
-                this.moving = true;
-            }
-            this.world.cameraX = -this.x +200;
-        }, 1000 / 60);
-
-        setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMGS_DEAD);
-            } else if (this.moving && !this.isHurt() && !this.isShooting) {
-                this.playAnimation(this.IMGS_SWIM);
-            } else if (!this.moving && !this.isHurt() && !this.isShooting) {
-                this.playAnimation(this.IMGS_IDLE);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMGS_SHOCKED);
-            } else if (this.isShooting) {
-                this.playAnimation(this.IMGS_SHOOT);
-                
-            }
-        }, 100);
-    
+        this.setupMovement();
+        this.setupAnimation();
         this.animateSwim();
     }
+    
 
+    setupMovement() {
+        setInterval(() => {
+            this.handleMovement();
+            this.updateCamera();
+        }, 1000 / 60);
+    }
+    
+    handleMovement() {
+        this.moving = false;
+        this.handleRightMovement();
+        this.handleLeftMovement();
+        this.handleUpMovement();
+        this.handleDownMovement();
+        if (this.moving) {
+            this.resetSleep();
+        }
+    }
+    
+    handleRightMovement() {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.levelEndX) {
+            this.x += this.speed;
+            this.otherDirection = false;
+            this.moving = true;
+        }
+    }
+    
+    handleLeftMovement() {
+        if (this.world.keyboard.LEFT && this.x > -200) {
+            this.x -= this.speed;
+            this.otherDirection = true;
+            this.moving = true;
+        }
+    }
+    
+    handleUpMovement() {
+        if (this.world.keyboard.UP && this.y > -80) {
+            this.y -= this.speed;
+            this.moving = true;
+        }
+    }
+    
+    handleDownMovement() {
+        if (this.world.keyboard.DOWN && this.y < 300) {
+            this.y += this.speed;
+            this.moving = true;
+        }
+    }
+    
+    updateCamera() {
+        this.world.cameraX = -this.x + 200;
+    }
+    
+  
+    
+    setupAnimation() {
+        setInterval(() => {
+            this.updateAnimation();
+        }, 100);
+    }
+    
+    updateAnimation() {
+        if (this.isDead()) {
+            this.playAnimation(this.IMGS_DEAD);
+        } else if (this.moving && !this.isHurt() && !this.isShooting) {
+            this.playAnimation(this.IMGS_SWIM);
+        } else if (!this.moving && !this.isHurt() && !this.isShooting && !this.sleeping) {
+            this.playAnimation(this.IMGS_IDLE);
+            this.startSleepTimer();
+        } else if (this.isHurt()) {
+            this.handleHurtAnimation();
+        } else if (this.isShooting) {
+            this.playAnimation(this.IMGS_SHOOT);
+        } else if (this.sleeping) {
+            this.playAnimation(this.IMGS_SLEEP);
+        }
+    }
+    
+    handleHurtAnimation() {
+        if (this.hitby == "PufferFisch") {
+            this.playAnimation(this.IMGS_POISON);
+        } else {
+            this.playAnimation(this.IMGS_SHOCKED);
+        }
+    }
+    
+    startSleepTimer() {
+        if (!this.sleepTimerRunning) {
+            this.sleepTimerRunning = true;
+            this.sleepTimer = setTimeout(() => {
+                this.sleeping = true;
+                this.sleepTimerRunning = false;
+            }, 15000); 
+        }
+    }
+
+    resetSleep() {
+        this.sleeping = false;
+        this.sleepTimerRunning = false;
+        if (this.sleepTimer) {
+            clearTimeout(this.sleepTimer);
+            this.sleepTimer = null;
+        }
+    }
 
     sinking() {
         setInterval(() => {
@@ -156,5 +255,7 @@ class Character extends MovableObject {
             this.world.createBubble();
         }, 1000);
     }
-    
+
+ 
+
 }
