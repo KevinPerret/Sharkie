@@ -1,18 +1,17 @@
 let level1 = new Level(
     [
-        new PufferFisch(1000, 200),
-        new PufferFisch(1100, 300),
-        new PufferFisch(600, 200),
-        new JellyFish(900, 0),
-        new JellyFish(1200, 100),
-        new PufferFisch(2000, 100),
-        new PufferFisch(2100, 200),
+        new PufferFisch(2000, 200),
+        new PufferFisch(2100, 300),
         new PufferFisch(1600, 200),
-        new JellyFish(2400, 0),
+        new JellyFish(1900, 0),
         new JellyFish(2200, 100),
+        new PufferFisch(3000, 100),
+        new PufferFisch(3100, 200),
+        new PufferFisch(2600, 200),
+        new JellyFish(3400, 0),
+        new JellyFish(3200, 100),
         new Endboss()
     ],
-
     [
         new BackgroundObject('img/3. Background/Layers/5. Water/L2.png', -720),
         new BackgroundObject('img/3. Background/Layers/4.Fondo 2/L2.png', -720),
@@ -55,5 +54,9 @@ let level1 = new Level(
         new BackgroundObject('img/3. Background/Layers/3.Fondo 1/L1.png', 4320),
         new BackgroundObject('img/3. Background/Layers/2. Floor/L1.png', 4320),
         new BackgroundObject('img/3. Background/Layers/1. Light/1.png', 4320)
-    ]
+    ],
+    [
+        new Poison(1000, 100),
+        new Poison(1500, 100)
+    ],
 );

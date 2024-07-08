@@ -40,7 +40,7 @@ class World {
     }
 
     checkMeele() {
-        if (this.keyboard.D && !this.character.isAttacking) {
+        if (this.keyboard.D && !this.character.isAttacking && !this.character.isHurt()) {
             this, this.character.animateMeeleAttack();
         }
     }
@@ -54,6 +54,9 @@ class World {
         this.level.enemies.forEach(enemy => {
             if (this.character.iscolliding(enemy)) {
                 if (enemy instanceof PufferFisch) {
+                    if(this.character.isAttacking){
+                        enemy.die();
+                    }
                     this.character.addPoison();
                     this.character.hit(enemy);
                     this.statusbarLife.setPercent(this.character.energie);
@@ -71,6 +74,9 @@ class World {
         this.level.enemies.forEach(e => {
             e.world = this;
         })
+        this.level.poison.forEach(p => {
+            p.world = this;
+        })
         this.backgroundSound.play();
         this.backgroundSound.volume = 0.5;
     }
@@ -83,11 +89,14 @@ class World {
         this.addObjectToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
         this.addObjectToMap(this.level.enemies);
+        this.addObjectToMap(this.level.poison);
         this.ctx.translate(-this.cameraX, 0);
+       
         this.addToMap(this.statusbarLife);
         this.addToMap(this.statusbarCoins);
         this.addToMap(this.statusbarPoison);
         this.addObjectToMap(this.bubble);
+       
         requestAnimationFrame(() => this.draw());
     }
 
