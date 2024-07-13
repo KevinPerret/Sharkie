@@ -1,7 +1,9 @@
 class Endboss extends MovableObject {
     world;
+    hurt = false;
     imgNr = 1;
-
+    health = 100;
+    isDead = false;
     offset = {
         top: 220,
         bottom: 120,
@@ -37,14 +39,28 @@ class Endboss extends MovableObject {
         'img/2.Enemy/3 Final Enemy/2.floating/13.png'
     ]
 
+    IMGS_HURT = ['img/2.Enemy/3 Final Enemy/Hurt/1.png',
+        'img/2.Enemy/3 Final Enemy/Hurt/2.png',
+        'img/2.Enemy/3 Final Enemy/Hurt/3.png',
+        'img/2.Enemy/3 Final Enemy/Hurt/4.png',
+    ]
+
+    IMGS_BOSSDEAD =['img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 6.png',
+        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 7.png',
+        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 8.png',
+        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 9.png',
+        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 10.png',
+    ]
     constructor() {
         super();
         this.loadImage(`img/2.Enemy/3 Final Enemy/1.Introduce/1.png`);
         this.loadImages(this.IMGS_INTRODUCE);
         this.loadImages(this.IMGS_FLOATING);
+        this.loadImages(this.IMGS_HURT);
+        this.loadImages(this.IMGS_BOSSDEAD);
         this.height = 480;
         this.width = 480;
-        this.x = 4500;
+        this.x = 5600;
         this.y = 0;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
@@ -53,20 +69,37 @@ class Endboss extends MovableObject {
     animate() {
         let i = 0;
         let firstContact = false;
-        setInterval(() => {
+       let test= setInterval(() => {
 
-            if (this.world.character.x >= 4000 && !firstContact) {
+            if (this.world.character.x >= 5200 && !firstContact) {
                 this.playAnimation(this.IMGS_INTRODUCE);
                 i++;
-                if (i == 10) {
+                if (i > 10) {
                     firstContact = true;
                 }
-            } else if (firstContact) {
+            } else if (firstContact && !this.hurt && !this.isDead) {
                 this.playAnimation(this.IMGS_FLOATING);
+            } else if (this.hurt && !this.isDead) {
+                this.playAnimation(this.IMGS_HURT);
+            }else if(this.isDead){
+                this.playAnimation(this.IMGS_BOSSDEAD);
+                console.log(this.lastImg);
+                if (this.lastImg) {
+                    clearInterval(test);
+                }
             }
         }, 1000 / 10);
 
     }
 
-
+    hitByBubble() {
+        this.health -= 10;
+        this.hurt = true;
+        setTimeout(() => {
+            this.hurt = false;
+        }, 1000);
+        if (this.health <= 0) {
+            this.isDead = true;
+        }
+    }
 }

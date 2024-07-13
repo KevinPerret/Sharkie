@@ -1,7 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-
+let backgroundSound;
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -54,6 +54,9 @@ window.addEventListener("keyup", (e) => {
 
 function startGame() {
     document.getElementById('startscreen').style.display = 'none';
-
+    backgroundSound = new Audio('audio/deepSeaBackground.mp3');
+    backgroundSound.play();
+    backgroundSound.loop = true;
+    backgroundSound.volume = 0.8;
     init();
 }

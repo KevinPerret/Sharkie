@@ -2,7 +2,6 @@ class Character extends MovableObject {
     imgNr = 0;
     world;
     speed = 10;
-    coins = 100;
     swimmingSound = new Audio('audio/swimShort.mp3');
     moving = false;
     isShooting = false;
@@ -123,8 +122,7 @@ class Character extends MovableObject {
         this.height = 200;
         this.width = 200;
         this.x = 200;
-        this.y = 200;
-
+        this.y = 100;
         this.sinking();
         this.moveChar();
     }
@@ -173,14 +171,14 @@ class Character extends MovableObject {
 
     handleUpMovement() {
         if (this.world.keyboard.UP && this.y > -80) {
-            this.y -= this.speed;
+            this.y -= 7;
             this.moving = true;
         }
     }
 
     handleDownMovement() {
         if (this.world.keyboard.DOWN && this.y < 300) {
-            this.y += this.speed;
+            this.y += 7;
             this.moving = true;
         }
     }
@@ -219,7 +217,7 @@ class Character extends MovableObject {
     }
 
     handleHurtAnimation() {
-        if (this.hitby == "PufferFisch") {
+        if (this.hitby == "PufferFisch" ) {
             this.playAnimation(this.IMGS_POISON);
         } else {
             this.playAnimation(this.IMGS_SHOCKED);
@@ -282,6 +280,4 @@ class Character extends MovableObject {
             this.iframes = false;
         }, 1000);
     }
-
-
 }

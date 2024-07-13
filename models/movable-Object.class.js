@@ -1,7 +1,7 @@
 class MovableObject extends DraweableObject {
 
   speed = 0.15;
-
+  world;
   otherDirection = false;
 
   energie = 100;
@@ -9,12 +9,16 @@ class MovableObject extends DraweableObject {
   lastHitPoison = 0;
   hitby = "";
   poisonLevel = 0;
+  coins = 0;
 
+  constructor() {
+    super();
+  }
 
   hit(enemy) {
     let currentTime = new Date().getTime();
-    if (currentTime - this.lastHit >= 1000 && !this.iframes) {
-      this.energie -= 10;
+    if (currentTime - this.lastHit >= 1000 && !this.iframes && !enemy.hurt) {
+      this.energie -= 20;
       if (this.energie < 0) {
         this.energie = 0;
       }
@@ -24,37 +28,35 @@ class MovableObject extends DraweableObject {
   }
 
   isHurt() {
-    let timePassed = new Date().getTime() - this.lastHit;
-    return timePassed < 1000;
+    let timePassed = new Date().getTime() - this.lastHit
+    let timePassedPoison = new Date().getTime() - this.lastHitPoison;
+    return timePassed < 1000 || timePassedPoison < 500;
   }
 
   isDead() {
-    return this.energie == 0 || this.poisonLevel == 100;
+    return this.energie == 0;
   }
+
 
   addPoison() {
     let currentTime = new Date().getTime();
     if (currentTime - this.lastHitPoison >= 1000 && !this.iframes) {
-      this.poisonLevel += 10;
+      this.poisonLevel += 50;
       if (this.poisonLevel > 100) {
-        this.poisonLevel = 100;
+        this.energie -= 20;
+        this.poisonLevel = 0;
+        this.world.statusbarLife.setPercent(this.energie);
       }
+      this.hitby = "PufferFisch";
       this.lastHitPoison = currentTime;
     }
   }
 
-  isPoisoned() {
-    let timePassed = new Date().getTime() - this.lastHitPoison;
-    return timePassed < 1000;
-  }
 
-  playAnimation(IMGS) {
-    let i = this.imgNr % IMGS.length;
-    let path = IMGS[i];
-    this.img = this.imgCache[path];
-    this.imgNr++;
+  addCoins() {
+    this.coins += 1;
+    this.world.statusbarCoins.setPercentCoin(this.coins / this.world.level.coinsPerLevel * 100);
   }
-  
 
   moveRight() {
 
@@ -73,11 +75,13 @@ class MovableObject extends DraweableObject {
     this.y -= this.speed;
   }
 
+  iscolliding(obj, cameraOffset = 0) {
+    let bubbleAdjustedX = this instanceof Bubbles ? this.x - cameraOffset : this.x;
 
-  iscolliding(obj) {
-    return this.x + this.width - this.offset.right > obj.x + obj.offset.left &&
+    return bubbleAdjustedX + this.width - this.offset.right > obj.x + obj.offset.left &&
       this.y + this.height - this.offset.bottom > obj.y + obj.offset.top &&
-      this.x + this.offset.left < obj.x + obj.width - obj.offset.right &&
+      bubbleAdjustedX + this.offset.left < obj.x + obj.width - obj.offset.right &&
       this.y + this.offset.top < obj.y + obj.height - obj.offset.bottom;
   }
 }
+

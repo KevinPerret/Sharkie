@@ -1,6 +1,13 @@
 class Poison extends DraweableObject{
     imgNr = 1;
     world;
+    offset = {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+    }
+    
 IMGS_POISONBOTTLE=[
     'img/4. Marcadores/Posion/Animada/1.png',
     'img/4. Marcadores/Posion/Animada/2.png',
@@ -17,9 +24,16 @@ IMGS_POISONBOTTLE=[
         this.loadImages(this.IMGS_POISONBOTTLE);
         this.x = x
         this.y = y;
-        this.width = 250;
-        this.height = 60;
-      
+        this.width = 50;
+        this.height = 50;
+      this.animateBottle();
+    }
+
+    animateBottle(){
+        setInterval(() => {
+      this.playAnimation(this.IMGS_POISONBOTTLE)
+    },100)
+
     }
 
 }

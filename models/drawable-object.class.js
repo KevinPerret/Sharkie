@@ -5,6 +5,7 @@ class DraweableObject {
   y = 400;
   width = 100;
   height = 100;
+  lastImg = false;
 
   loadImage(path) {
     this.img = new Image();
@@ -23,8 +24,21 @@ class DraweableObject {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
+
+  playAnimation(IMGS) {
+    let i = this.imgNr % IMGS.length;
+    let path = IMGS[i];
+    this.img = this.imgCache[path];
+    this.imgNr++;
+    if (i == IMGS.length - 1) {
+      this.lastImg = true;
+    } else {
+      this.lastImg = false;
+    }
+  }
+
   drawRect(ctx) {
-    if (this instanceof Character || this instanceof Endboss || this instanceof PufferFisch || this instanceof JellyFish) {
+   
       ctx.beginPath();
       ctx.lineWidth = "2";
       ctx.strokeStyle = "red";
@@ -40,7 +54,7 @@ class DraweableObject {
         ctx.rect(this.x, this.y, this.width, this.height);
       }
       ctx.stroke();
-    }
+    
   }
 
   drawMirrored(ctx) {
