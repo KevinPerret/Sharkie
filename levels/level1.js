@@ -1,3 +1,4 @@
+
 let level1 = new Level(
     [
         new PufferFisch(2400, 200),

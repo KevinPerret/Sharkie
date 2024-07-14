@@ -2,10 +2,11 @@ class Character extends MovableObject {
     imgNr = 0;
     world;
     speed = 10;
-    swimmingSound = new Audio('audio/swimShort.mp3');
+   
     moving = false;
     isShooting = false;
     sleeping = false;
+    deepSleep = false;  
     sleepTimerRunning = false;
     isAttacking = false;
     iframes = false;
@@ -99,6 +100,12 @@ class Character extends MovableObject {
         'img/1.Sharkie/2.Long_IDLE/i13.png',
         'img/1.Sharkie/2.Long_IDLE/i14.png'
     ]
+
+    IMGS_SLEEPDEEP = ['img/1.Sharkie/2.Long_IDLE/i12.png',
+        'img/1.Sharkie/2.Long_IDLE/i13.png',
+        'img/1.Sharkie/2.Long_IDLE/i14.png'
+    ]
+
     IMGS_MEELE = ['img/1.Sharkie/4.Attack/Fin slap/1.png',
         'img/1.Sharkie/4.Attack/Fin slap/2.png',
         'img/1.Sharkie/4.Attack/Fin slap/3.png',
@@ -190,15 +197,20 @@ class Character extends MovableObject {
 
 
     setupAnimation() {
-        setInterval(() => {
-            this.updateAnimation();
+       let animationIntervall= setInterval(() => {
+            this.updateAnimation(animationIntervall);
         }, 100);
     }
 
-    updateAnimation() {
+    updateAnimation(intervall) {
         let idle = !this.moving && !this.isShooting && !this.sleeping && !this.isAttacking;
         if (this.isDead()) {
             this.playAnimation(this.IMGS_DEAD);
+            if(this.lastImg){
+                clearInterval(intervall);
+            }
+            this.world.sound.deadSound.play();
+         
         } else if (this.moving && !this.isHurt() && !this.isShooting && !this.isAttacking) {
             this.playAnimation(this.IMGS_SWIM);
         } else if (idle && !this.isHurt()) {
@@ -212,23 +224,34 @@ class Character extends MovableObject {
             this.playAnimation(this.IMGS_MEELE);
         }
         else if (this.sleeping) {
-            this.playAnimation(this.IMGS_SLEEP);
+            if (this.lastImg||this.deepSleep) {
+                this.deepSleep = true;
+                this.playAnimation(this.IMGS_SLEEPDEEP);
+            } else {
+                this.playAnimation(this.IMGS_SLEEP);
+            }
         }
     }
 
     handleHurtAnimation() {
-        if (this.hitby == "PufferFisch" ) {
+        if (this.hitby == "PufferFisch") {
             this.playAnimation(this.IMGS_POISON);
+            this.world.sound.poisonedSound.play();
+      
         } else {
             this.playAnimation(this.IMGS_SHOCKED);
+            this.world.sound.shockedSound.play();
+          
         }
     }
 
     startSleepTimer() {
-        if (!this.sleepTimerRunning) {
+        if (!this.sleepTimerRunning && gameStarted) {
             this.sleepTimerRunning = true;
             this.sleepTimer = setTimeout(() => {
                 this.sleeping = true;
+                this.world.sound.snoringSound.play();
+                this.world.sound.snoringSound.loop = true;
                 this.sleepTimerRunning = false;
             }, 15000);
         }
@@ -236,6 +259,8 @@ class Character extends MovableObject {
 
     resetSleep() {
         this.sleeping = false;
+        this.deepSleep = false;
+        this.world.sound.snoringSound.pause();
         this.sleepTimerRunning = false;
         if (this.sleepTimer) {
             clearTimeout(this.sleepTimer);
@@ -255,9 +280,9 @@ class Character extends MovableObject {
     animateSwim() {
         setInterval(() => {
             if (this.moving) {
-                this.swimmingSound.play();
-                this.swimmingSound.volume = 0.1;
-                this.swimmingSound.playbackRate = 1.5;
+                this.world.sound.swimmingSound.play();
+              
+                this.world.sound.swimmingSound.playbackRate = 1.5;
             }
             this.moving = false;
         }, 1000 / 5);
@@ -269,12 +294,16 @@ class Character extends MovableObject {
         setTimeout(() => {
             this.isShooting = false;
             this.world.createBubble();
+            this.world.sound.bubbleSound.play();
+          
         }, 1000);
     }
     animateMeeleAttack() {
         this.imgNr = 0;
         this.isAttacking = true;
         this.iframes = true;
+        this.world.sound.meeleSound.play();
+    
         setTimeout(() => {
             this.isAttacking = false;
             this.iframes = false;

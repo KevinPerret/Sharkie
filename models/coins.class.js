@@ -30,5 +30,8 @@ IMGS_COINS=['img/4. Marcadores/1. Coins/1.png',
     },100)
 
     }
-   
+   collected(){
+      this.world.sound.collectSound.play();
+    
+   }
 }

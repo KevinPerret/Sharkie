@@ -49,7 +49,7 @@ class DraweableObject {
         ctx.rect(this.x, this.y, this.width, this.height - 25);
       }
       else if (this instanceof Endboss) {
-        ctx.rect(this.x, this.y + 170, this.width, this.height - 240);
+        ctx.rect(this.x, this.y + 170, this.width, this.height - 200);
       } else {
         ctx.rect(this.x, this.y, this.width, this.height);
       }

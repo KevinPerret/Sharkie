@@ -2,8 +2,9 @@ class PufferFisch extends MovableObject {
   world;
   imgNr = 1;
   movingLeft = true;
-  startX; // To store the initial x position
-  range = 300; // Define th
+  startX;
+  range = 300;
+ 
   dead = false;
   offset = {
     top: 0,
@@ -31,7 +32,6 @@ class PufferFisch extends MovableObject {
     this.x = x;
     this.y = y;
     this.startX = this.x;
-
     this.speed = 0.55 + Math.random() * 0.25;
     this.animate();
     this.changeLeftAndRight();
@@ -59,10 +59,13 @@ class PufferFisch extends MovableObject {
   deathAnimation() {
     this.dead = true;
     setInterval(() => {
-      this.x -= 10;
-      this.y -= 10;
+      this.x -= 7;
+      this.y -= 7;
+      this.world.sound.pufferHurtSound.play();
+      this.world.sound.pufferHurtSound.playbackRate = 2;
       if (this.y <= 0) {
         level1.enemies = level1.enemies.filter(enemy => enemy !== this);
+        this.world.sound.pufferHurtSound.pause();
       }
     }, 100);
   }

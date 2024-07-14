@@ -1,10 +1,11 @@
 class World {
     character = new Character();
-    level = level1;
+ 
     statusbarLife = new StatusBarLife();
     statusbarCoins = new StatusBarCoin();
     statusbarPoison = new StatusBarPoison();
-    bubble = new Bubbles(0,-100,false);
+    bubble = new Bubbles(0, -100, false);
+    level = level1;
     ctx;
     canvas;
     keyboard;
@@ -12,14 +13,14 @@ class World {
     remainingCoins = this.level.coinsPerLevel;
 
 
-    constructor(canvas, keyboard) {
+    constructor(canvas, keyboard, sound) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.sound = sound;
         this.draw();
         this.setWorld();
         this.run();
-        this.backgroundSound = backgroundSound;
     }
 
     run() {
@@ -58,14 +59,14 @@ class World {
     createBubble() {
         let xoffset = this.character.otherDirection ? -40 : 150;
         let bubbleX = this.character.x + xoffset + this.cameraX;
-        let bubbleY = this.character.y + 100; 
+        let bubbleY = this.character.y + 100;
         let bubble = new Bubbles(bubbleX, bubbleY, this.character.otherDirection);
         this.bubble = bubble;
         this.character.coins -= 1;
         this.remainingCoins = this.remainingCoins - 1;
         this.statusbarCoins.setPercentCoin(this.character.coins / this.level.coinsPerLevel * 100);
     }
-    
+
     checkCollision() {
         this.collisionCoin();
         this.collisionEnemy();
@@ -78,6 +79,7 @@ class World {
         this.statusbarCoins.setPercentCoin(this.character.coins / this.level.coinsPerLevel * 100);
         this.level.coins = this.level.coins.filter(coin => {
             if (this.character.iscolliding(coin)) {
+                coin.collected();
                 return false;
             }
             return true;
@@ -85,28 +87,30 @@ class World {
     }
     collisionBubble() {
         if (this.bubble) {
-            let cameraOffset= this.cameraX;
+            let cameraOffset = this.cameraX;
             this.level.enemies.forEach(enemy => {
-                if (this.bubble.iscolliding(enemy,cameraOffset)) {
+                if (this.bubble.iscolliding(enemy, cameraOffset)) {
                     if (enemy instanceof JellyFish) {
                         this.bubble.y = -100;
                         enemy.bubbleDeath();
-                    }else if (enemy instanceof PufferFisch) {
-                       this.bubble.y = -100;
-                    }else if (enemy instanceof Endboss) {
+                    } else if (enemy instanceof PufferFisch) {
                         this.bubble.y = -100;
-                        if (!enemy.hurt){
-                        enemy.hitByBubble();}
+                    } else if (enemy instanceof Endboss) {
+                        this.bubble.y = -100;
+                        if (!enemy.hurt) {
+                            enemy.hitByPlayer();
+                        }
                     }
-                  
-                }})
-                
-            ;
+
+                }
+            })
+
+                ;
         } else {
             console.log("Bubble is not defined.");
         }
     }
-    
+
     collisionEnemy() {
         this.level.enemies.forEach(enemy => {
             if (this.character.iscolliding(enemy)) {
@@ -118,6 +122,12 @@ class World {
                     this.character.hit(enemy);
                     this.statusbarLife.setPercent(this.character.energie);
                     this.statusbarPoison.setPercentPoison(this.character.poisonLevel);
+                } else if (enemy instanceof Endboss) {
+                    if (this.character.isAttacking && !enemy.hurt) {
+                        enemy.hitByPlayer();
+                    }
+                    this.character.hit(enemy);
+                    this.statusbarLife.setPercent(this.character.energie);
                 } else {
                     this.character.hit(enemy);
                     this.statusbarLife.setPercent(this.character.energie);
@@ -141,7 +151,7 @@ class World {
         this.addObjectToMap(this.level.backgroundObjects);
         this.addToMap(this.character);
         this.addObjectToMap(this.level.enemies);
-  
+
         this.addObjectToMap(this.level.poison);
         this.addObjectToMap(this.level.coins);
         this.ctx.translate(-this.cameraX, 0);
@@ -149,7 +159,7 @@ class World {
         this.addToMap(this.statusbarCoins);
         this.addToMap(this.statusbarPoison);
         this.addToMap(this.bubble);
-       
+
 
         requestAnimationFrame(() => this.draw());
     }
@@ -162,14 +172,14 @@ class World {
     }
 
     addToMap(mo) {
-        if(mo){
-        if (mo.otherDirection) {
-            mo.drawMirrored(this.ctx);
-            mo.drawRectMirrored(this.ctx);
-        } else {
-            mo.draw(this.ctx);
-            mo.drawRect(this.ctx);
+        if (mo) {
+            if (mo.otherDirection) {
+                mo.drawMirrored(this.ctx);
+                mo.drawRectMirrored(this.ctx);
+            } else {
+                mo.draw(this.ctx);
+                mo.drawRect(this.ctx);
+            }
         }
-    }
     }
 }

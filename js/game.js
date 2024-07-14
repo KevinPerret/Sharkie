@@ -2,11 +2,11 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let backgroundSound;
+let gameStarted = false;
+let sound = new Sound();
 
-function init() {
-    canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
-}
+
+
 
 window.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
@@ -54,9 +54,11 @@ window.addEventListener("keyup", (e) => {
 
 function startGame() {
     document.getElementById('startscreen').style.display = 'none';
-    backgroundSound = new Audio('audio/deepSeaBackground.mp3');
-    backgroundSound.play();
-    backgroundSound.loop = true;
-    backgroundSound.volume = 0.8;
+    gameStarted = true;
     init();
+}
+function init() {
+    canvas = document.getElementById('canvas');
+    world = new World(canvas, keyboard, sound);
+    world.sound.startBackgroundMusic();
 }

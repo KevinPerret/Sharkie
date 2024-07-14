@@ -64,8 +64,11 @@ class JellyFish extends MovableObject {
                 }
             }else if(this.dead){
                 this.y -= 7;
+                this.world.sound.jellyHurtSound.play();
                 if(this.y <=0){
                     level1.enemies = level1.enemies.filter(enemy => enemy !== this);
+                    this.world.sound.jellyHurtSound.pause();
+
                 }
             }
         }, 1000 / 60);

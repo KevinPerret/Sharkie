@@ -5,11 +5,14 @@ class Endboss extends MovableObject {
     health = 100;
     isDead = false;
     offset = {
-        top: 220,
-        bottom: 120,
+        top: 200,
+        bottom: 80,
         left: 10,
         right: 10
     }
+
+
+
     IMGS_INTRODUCE = [
         `img/2.Enemy/3 Final Enemy/1.Introduce/1.png`,
         `img/2.Enemy/3 Final Enemy/1.Introduce/2.png`,
@@ -45,7 +48,7 @@ class Endboss extends MovableObject {
         'img/2.Enemy/3 Final Enemy/Hurt/4.png',
     ]
 
-    IMGS_BOSSDEAD =['img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 6.png',
+    IMGS_BOSSDEAD = ['img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 6.png',
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 7.png',
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 8.png',
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 9.png',
@@ -58,48 +61,50 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMGS_FLOATING);
         this.loadImages(this.IMGS_HURT);
         this.loadImages(this.IMGS_BOSSDEAD);
-        this.height = 480;
-        this.width = 480;
+        this.height = 380;
+        this.width = 380;
         this.x = 5600;
         this.y = 0;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
     }
 
-    animate() {
-        let i = 0;
-        let firstContact = false;
-       let test= setInterval(() => {
 
-            if (this.world.character.x >= 5200 && !firstContact) {
-                this.playAnimation(this.IMGS_INTRODUCE);
-                i++;
-                if (i > 10) {
-                    firstContact = true;
-                }
-            } else if (firstContact && !this.hurt && !this.isDead) {
-                this.playAnimation(this.IMGS_FLOATING);
-            } else if (this.hurt && !this.isDead) {
-                this.playAnimation(this.IMGS_HURT);
-            }else if(this.isDead){
-                this.playAnimation(this.IMGS_BOSSDEAD);
-                console.log(this.lastImg);
-                if (this.lastImg) {
-                    clearInterval(test);
+    animate() {
+        let firstContact = false;
+        let test = setInterval(() => {
+            if (gameStarted) {
+                if (this.world.character.x >= 5200 && !firstContact) {
+                    this.playAnimation(this.IMGS_INTRODUCE);
+                    if (this.lastImg) {
+                        firstContact = true;
+                    }
+                } else if (firstContact && !this.hurt && !this.isDead) {
+                    this.playAnimation(this.IMGS_FLOATING);
+                } else if (this.hurt && !this.isDead) {
+                    this.playAnimation(this.IMGS_HURT);
+                } else if (this.isDead) {
+                    this.playAnimation(this.IMGS_BOSSDEAD);
+                    if (this.lastImg) {
+                        clearInterval(test);
+                    }
                 }
             }
         }, 1000 / 10);
 
     }
 
-    hitByBubble() {
+    hitByPlayer() {
         this.health -= 10;
         this.hurt = true;
+        this.world.sound.bossHurtSound.play();
+
         setTimeout(() => {
             this.hurt = false;
         }, 1000);
         if (this.health <= 0) {
             this.isDead = true;
+            this.world.sound.bossDeadSound.play();
         }
     }
 }
