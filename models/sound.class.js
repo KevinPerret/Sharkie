@@ -28,7 +28,6 @@ class Sound {
       this.meeleSound,
       this.jellyHurtSound,
       this.collectSound,
-      this.backgroundSound,
       this.pufferHurtSound
 
     ];
@@ -41,6 +40,7 @@ class Sound {
 
   startBackgroundMusic() {
     this.backgroundSound.play();
+    this.backgroundSound.volume = 0.03;
     this.backgroundSound.loop = true;
   }
 
@@ -59,12 +59,14 @@ class Sound {
           this.allAudios.forEach((audio) => {
             audio.volume = 0;
           });
+          this.backgroundSound.volume = 0;
           isMuted = true;
         }
         else {
           this.allAudios.forEach((audio) => {
             audio.volume = 0.1;
           })
+          this.backgroundSound.volume = 0.03;
           isMuted = false;
         }
       });

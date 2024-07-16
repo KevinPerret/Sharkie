@@ -4,14 +4,31 @@ let keyboard = new Keyboard();
 let backgroundSound;
 let gameStarted = false;
 let sound = new Sound();
+let firstContact = false;
+let intervals = [];
+let gameover = false;
+let win = false;
 
+function toggleGameOverScreen(win) {
+    document.getElementById('gameOverScreen').classList.toggle('dNone');
+    win ? document.getElementById('finalImage').src = "img/6.Botones/Tittles/You win/Recurso 19.png" : document.getElementById('finalImage').src = "img/6.Botones/Tittles/Game Over/Recurso 10.png"
 
+}
+
+function addInterval(interval) {
+    intervals.push(interval);
+}
+
+function stopAllIntervals() {
+    intervals.forEach(interval => clearInterval(interval));
+    intervals = [];
+}
 
 
 window.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
         keyboard.SPACE = true;
-        event.preventDefault();
+        e.preventDefault();
     }
     if (e.code === "ArrowUp") {
         keyboard.UP = true;
@@ -53,12 +70,19 @@ window.addEventListener("keyup", (e) => {
 });
 
 function startGame() {
-    document.getElementById('startscreen').style.display = 'none';
-    gameStarted = true;
+    document.getElementById('startscreen').classList.toggle('dNone');
+
     init();
 }
 function init() {
+
+    createLevel1();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard, sound);
+    gameStarted = true;
+    gameover = false;
+    firstContact = false;
+
+
     world.sound.startBackgroundMusic();
 }

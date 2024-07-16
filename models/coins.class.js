@@ -25,9 +25,10 @@ IMGS_COINS=['img/4. Marcadores/1. Coins/1.png',
     }
 
     animateCoins(){
-        setInterval(() => {
+       const animateCoinsInterval= setInterval(() => {
       this.playAnimation(this.IMGS_COINS)
     },100)
+    addInterval(animateCoinsInterval);
 
     }
    collected(){

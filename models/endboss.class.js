@@ -10,7 +10,7 @@ class Endboss extends MovableObject {
         left: 10,
         right: 10
     }
-
+   
 
 
     IMGS_INTRODUCE = [
@@ -71,8 +71,7 @@ class Endboss extends MovableObject {
 
 
     animate() {
-        let firstContact = false;
-        let test = setInterval(() => {
+        const animateBoss = setInterval(() => {
             if (gameStarted) {
                 if (this.world.character.x >= 5200 && !firstContact) {
                     this.playAnimation(this.IMGS_INTRODUCE);
@@ -91,6 +90,7 @@ class Endboss extends MovableObject {
                 }
             }
         }, 1000 / 10);
+       addInterval(animateBoss);
 
     }
 
@@ -105,6 +105,8 @@ class Endboss extends MovableObject {
         if (this.health <= 0) {
             this.isDead = true;
             this.world.sound.bossDeadSound.play();
+            win = true;  
+            toggleGameOverScreen(win);    
         }
     }
 }

@@ -30,10 +30,10 @@ IMGS_POISONBOTTLE=[
     }
 
     animateBottle(){
-        setInterval(() => {
+       const animateBottleInterval= setInterval(() => {
       this.playAnimation(this.IMGS_POISONBOTTLE)
     },100)
-
+    addInterval(animateBottleInterval);
     }
 
 }

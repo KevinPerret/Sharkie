@@ -3,7 +3,7 @@ canvas {
     display: block;
 }
 
-#startscreen {
+.startscreen {
     position: absolute;
     display: flex;
     justify-content: space-between;
@@ -54,11 +54,34 @@ img {
 
 #muteBtn {
     position: absolute;
-   top: 10px;
+   bottom: 10px;
   right: 20px;
     padding: 10px;
   
 }
+
+.gameOver{
+    width: 400px;
+}
+
+
+.gameOverScreen{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute ;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+    align-items: center;
+    justify-content: center;
+}
+.dNone{
+    display: none;
+}
+
 
 @font-face {
     font-family: 'Luckiest Guy';

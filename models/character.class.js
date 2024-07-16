@@ -2,11 +2,11 @@ class Character extends MovableObject {
     imgNr = 0;
     world;
     speed = 10;
-   
+
     moving = false;
     isShooting = false;
     sleeping = false;
-    deepSleep = false;  
+    deepSleep = false;
     sleepTimerRunning = false;
     isAttacking = false;
     iframes = false;
@@ -116,7 +116,7 @@ class Character extends MovableObject {
         'img/1.Sharkie/4.Attack/Fin slap/8.png'
     ]
 
-    constructor() {
+    constructor(energie) {
         super().loadImage('img/1.Sharkie/1.IDLE/1.png');
         this.loadImages(this.IMGS_SWIM);
         this.loadImages(this.IMGS_IDLE);
@@ -128,6 +128,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMGS_MEELE);
         this.height = 200;
         this.width = 200;
+        this.energie = energie;
         this.x = 200;
         this.y = 100;
         this.sinking();
@@ -143,20 +144,25 @@ class Character extends MovableObject {
 
 
     setupMovement() {
-        setInterval(() => {
+       const setMovementInterval= setInterval(() => {
             this.handleMovement();
-            this.updateCamera();
+            this.updateCamera();   
         }, 1000 / 60);
+        addInterval(setMovementInterval);
     }
 
+
     handleMovement() {
-        this.moving = false;
-        this.handleRightMovement();
-        this.handleLeftMovement();
-        this.handleUpMovement();
-        this.handleDownMovement();
-        if (this.moving) {
-            this.resetSleep();
+
+        if (!gameover) {
+            this.moving = false;
+            this.handleRightMovement();
+            this.handleLeftMovement();
+            this.handleUpMovement();
+            this.handleDownMovement();
+            if (this.moving || this.isShooting || this.isAttacking) {
+                this.resetSleep();
+            }
         }
     }
 
@@ -197,20 +203,30 @@ class Character extends MovableObject {
 
 
     setupAnimation() {
-       let animationIntervall= setInterval(() => {
+        let animationIntervall = setInterval(() => {
             this.updateAnimation(animationIntervall);
         }, 100);
+        addInterval(animationIntervall);
     }
 
     updateAnimation(intervall) {
         let idle = !this.moving && !this.isShooting && !this.sleeping && !this.isAttacking;
+
         if (this.isDead()) {
             this.playAnimation(this.IMGS_DEAD);
-            if(this.lastImg){
+            if (this.lastImg) {
+                if (!gameover) {
+                    gameover = true;
+                    stopAllIntervals();
+                    gameStarted = false;
+                    this.x = 200;
+                    toggleGameOverScreen();
+             
+                }
                 clearInterval(intervall);
+
             }
-            this.world.sound.deadSound.play();
-         
+            this.world.sound.deadSound.play();  
         } else if (this.moving && !this.isHurt() && !this.isShooting && !this.isAttacking) {
             this.playAnimation(this.IMGS_SWIM);
         } else if (idle && !this.isHurt()) {
@@ -224,7 +240,7 @@ class Character extends MovableObject {
             this.playAnimation(this.IMGS_MEELE);
         }
         else if (this.sleeping) {
-            if (this.lastImg||this.deepSleep) {
+            if (this.lastImg || this.deepSleep) {
                 this.deepSleep = true;
                 this.playAnimation(this.IMGS_SLEEPDEEP);
             } else {
@@ -237,11 +253,11 @@ class Character extends MovableObject {
         if (this.hitby == "PufferFisch") {
             this.playAnimation(this.IMGS_POISON);
             this.world.sound.poisonedSound.play();
-      
+
         } else {
             this.playAnimation(this.IMGS_SHOCKED);
             this.world.sound.shockedSound.play();
-          
+
         }
     }
 
@@ -269,23 +285,25 @@ class Character extends MovableObject {
     }
 
     sinking() {
-        setInterval(() => {
+       const sinkingInterval= setInterval(() => {
             if (this.y < 300 && !this.moving) {
                 this.y += 0.15;
             }
         }, 1000 / 60);
+        addInterval(sinkingInterval);
 
     }
 
     animateSwim() {
-        setInterval(() => {
+      const swimInterval=  setInterval(() => {
             if (this.moving) {
                 this.world.sound.swimmingSound.play();
-              
+
                 this.world.sound.swimmingSound.playbackRate = 1.5;
             }
             this.moving = false;
         }, 1000 / 5);
+        addInterval(swimInterval);
     }
 
     animateShooting() {
@@ -295,15 +313,16 @@ class Character extends MovableObject {
             this.isShooting = false;
             this.world.createBubble();
             this.world.sound.bubbleSound.play();
-          
+
         }, 1000);
     }
+
     animateMeeleAttack() {
         this.imgNr = 0;
         this.isAttacking = true;
         this.iframes = true;
         this.world.sound.meeleSound.play();
-    
+
         setTimeout(() => {
             this.isAttacking = false;
             this.iframes = false;

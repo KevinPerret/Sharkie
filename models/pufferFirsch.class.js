@@ -4,7 +4,7 @@ class PufferFisch extends MovableObject {
   movingLeft = true;
   startX;
   range = 300;
- 
+  soundPlayed = false;
   dead = false;
   offset = {
     top: 0,
@@ -39,7 +39,7 @@ class PufferFisch extends MovableObject {
 
 
   animate() {
-    setInterval(() => {
+    const animatePufferInterval = setInterval(() => {
       if (this.dead) {
         this.playAnimation(this.IMGS_DIE);
       }
@@ -47,7 +47,7 @@ class PufferFisch extends MovableObject {
         this.playAnimation(this.IMGS_IDLE);
       }
     }, 150);
-
+    addInterval(animatePufferInterval);
     this.moveLeft();
 
   }
@@ -58,20 +58,22 @@ class PufferFisch extends MovableObject {
 
   deathAnimation() {
     this.dead = true;
-    setInterval(() => {
+    const animatePufferDeadInterval = setInterval(() => {
       this.x -= 7;
       this.y -= 7;
-      this.world.sound.pufferHurtSound.play();
-      this.world.sound.pufferHurtSound.playbackRate = 2;
+      if (!this.soundPlayed) {
+        this.world.sound.pufferHurtSound.play();
+        this.soundPlayed = true;
+      }
       if (this.y <= 0) {
         level1.enemies = level1.enemies.filter(enemy => enemy !== this);
-        this.world.sound.pufferHurtSound.pause();
       }
     }, 100);
+    addInterval(animatePufferDeadInterval);
   }
 
   changeLeftAndRight() {
-    setInterval(() => {
+    const leftRightInterval = setInterval(() => {
       if (this.movingLeft) {
         this.moveLeft();
         this.otherDirection = false;
@@ -86,5 +88,6 @@ class PufferFisch extends MovableObject {
         }
       }
     }, 1000 / 60);
+    addInterval(leftRightInterval);
   }
 }

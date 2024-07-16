@@ -2,12 +2,12 @@ class JellyFish extends MovableObject {
     imgNr = 1;
     world;
     movingDown = true;
-
-    offset ={
+    soundPlayed = false;
+    offset = {
         top: 0,
         bottom: 0,
         left: 0,
-        right:0
+        right: 0
     }
     IMGS_WALKING = [
         `img/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png`,
@@ -34,13 +34,14 @@ class JellyFish extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
+       const animateJellyInterval= setInterval(() => {
             if (this.dead) {
                 this.playAnimation(this.IMGS_DEADBUBBLE);
-              
-            } else {
-            this.playAnimation(this.IMGS_WALKING)}
 
+            } else {
+                this.playAnimation(this.IMGS_WALKING)
+            }
+            addInterval(animateJellyInterval);
         }, 150);
 
     }
@@ -51,26 +52,28 @@ class JellyFish extends MovableObject {
 
 
     changeUpAndDown() {
-        setInterval(() => {
+       const changeUpDownInterval= setInterval(() => {
             if (this.movingDown && !this.dead) {
                 this.moveDown();
                 if (this.y >= 300) {
                     this.movingDown = false;
                 }
-            } else if (!this.dead && !this.movingDown){
+            } else if (!this.dead && !this.movingDown) {
                 this.moveUp();
-                if (this.y <= 0) { 
+                if (this.y <= 0) {
                     this.movingDown = true;
                 }
-            }else if(this.dead){
+            } else if (this.dead && this.y > 0) {
                 this.y -= 7;
-                this.world.sound.jellyHurtSound.play();
-                if(this.y <=0){
+                if (!this.soundPlayed) {
+                    this.world.sound.jellyHurtSound.play();
+                    this.soundPlayed = true;
+                }
+                if (this.y <= 0) {
                     level1.enemies = level1.enemies.filter(enemy => enemy !== this);
-                    this.world.sound.jellyHurtSound.pause();
-
                 }
             }
         }, 1000 / 60);
+        addInterval(changeUpDownInterval);
     }
 }

@@ -1,6 +1,6 @@
 class StatusBarLife extends DraweableObject {
 
-    IMAGES_LIFE = ['img/4. Marcadores/green/Life/0.png',
+    IMAGES_LIFE_YELLOW = ['img/4. Marcadores/green/Life/0.png',
         'img/4. Marcadores/green/Life/20.png',
         'img/4. Marcadores/green/Life/40.png',
         'img/4. Marcadores/green/Life/60.png',
@@ -8,20 +8,23 @@ class StatusBarLife extends DraweableObject {
         'img/4. Marcadores/green/Life/100.png'
     ];
 
-    IMAGES_COINS = ['img/4. Marcadores/green/Coin/0_  copia 4.png',
-        'img/4. Marcadores/green/Coin/20_  copia 2.png',
-        'img/4. Marcadores/green/Coin/40_  copia 4.png',
-        'img/4. Marcadores/green/Coin/60_  copia 4.png',
-        'img/4. Marcadores/green/Coin/80_  copia 4.png',
-        'img/4. Marcadores/green/Coin/100_ copia 4.png'
-    ];
+    IMAGES_LIFE_ORANGE =['img/4. Marcadores/orange/0_ Life.png',
+        'img/4. Marcadores/orange/20_ Life.png',
+        'img/4. Marcadores/orange/40_ Life.png',
+        'img/4. Marcadores/orange/60_ Life.png',
+        'img/4. Marcadores/orange/80_ Life.png',
+        'img/4. Marcadores/orange/100_ Life.png'
+    ]
+
+
 
     percent = 100;
 
-    constructor() {
+    constructor(x) {
         super();
-        this.loadImages(this.IMAGES_LIFE);
-        this.x = 10;
+        this.loadImages(this.IMAGES_LIFE_YELLOW);
+        this.loadImages(this.IMAGES_LIFE_ORANGE);
+        this.x = x;
         this.y = 0;
         this.width = 150;
         this.height = 50;
@@ -30,7 +33,13 @@ class StatusBarLife extends DraweableObject {
 
     setPercent(percent) {
         this.percent = percent;
-        let imgPath = this.IMAGES_LIFE[this.resolveImgIndex()];
+        let imgPath = this.IMAGES_LIFE_YELLOW[this.resolveImgIndex()];
+        this.img = this.imgCache[imgPath];
+    }
+
+    setPercentBoss(percent) {
+        this.percent = percent;
+        let imgPath = this.IMAGES_LIFE_ORANGE[this.resolveImgIndex()];
         this.img = this.imgCache[imgPath];
     }
 

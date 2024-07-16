@@ -20,7 +20,7 @@ class Bubbles extends MovableObject {
     }
 
     shootBubble() {
-        setInterval(() => {
+       const shootBubbleInterval = setInterval(() => {
             if (this.otherDirection == true) {
                 this.y += this.speed / 2;
                 this.x += this.speed;
@@ -29,8 +29,9 @@ class Bubbles extends MovableObject {
                 this.x -= this.speed;
             }
         }, 50);
+        addInterval(shootBubbleInterval);
     }
-    
+   
     
 }
 

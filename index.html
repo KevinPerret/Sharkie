@@ -12,12 +12,16 @@
 </head>
 
 <body>
-    <div id="startscreen">
+    <div id="startscreen" class="startscreen">
         <h1>Sharkie the Game</h1>
-        <img id="" class="startBtn" onclick="startGame()" src="img/6.Botones/Start/1.png" alt="">
+        <img class="startBtn" onclick="startGame()" src="img/6.Botones/Start/1.png" alt="">
         <img class="controlerBtn" src="img/6.Botones/controller.png" alt="">
     </div>
     <main>
+        <div id="gameOverScreen" class="gameOverScreen dNone">
+            <img id="finalImage" class="gameOver" src="img/6.Botones/Tittles/Game Over/Recurso 10.png" alt="">
+            <img  class="startBtn" onclick="toggleGameOverScreen(),init()" src="img/6.Botones/Try again/Recurso 18.png" alt="">
+        </div>
         <canvas id="canvas" width="720" height="480px"></canvas>
         <button id="muteBtn">mute</button>
     </main>

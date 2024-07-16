@@ -1,10 +1,11 @@
 class World {
-    character = new Character();
- 
-    statusbarLife = new StatusBarLife();
+    character = new Character(100);
+    statusbarLife = new StatusBarLife(10);
+    statusbarBoss = new StatusBarLife(560);
     statusbarCoins = new StatusBarCoin();
     statusbarPoison = new StatusBarPoison();
     bubble = new Bubbles(0, -100, false);
+
     level = level1;
     ctx;
     canvas;
@@ -22,6 +23,9 @@ class World {
         this.setWorld();
         this.run();
     }
+
+ 
+  
 
     run() {
         this.checkCollision();
@@ -99,6 +103,7 @@ class World {
                         this.bubble.y = -100;
                         if (!enemy.hurt) {
                             enemy.hitByPlayer();
+                            this.statusbarBoss.setPercentBoss(enemy.health);
                         }
                     }
 
@@ -125,6 +130,7 @@ class World {
                 } else if (enemy instanceof Endboss) {
                     if (this.character.isAttacking && !enemy.hurt) {
                         enemy.hitByPlayer();
+                        this.statusbarBoss.setPercentBoss(enemy.health);
                     }
                     this.character.hit(enemy);
                     this.statusbarLife.setPercent(this.character.energie);
@@ -158,6 +164,9 @@ class World {
         this.addToMap(this.statusbarLife);
         this.addToMap(this.statusbarCoins);
         this.addToMap(this.statusbarPoison);
+        if (firstContact) {
+            this.addToMap(this.statusbarBoss);
+        }
         this.addToMap(this.bubble);
 
 
