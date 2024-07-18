@@ -4,10 +4,10 @@ class JellyFish extends MovableObject {
     movingDown = true;
     soundPlayed = false;
     offset = {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0
+        top: 15,
+        bottom: 15,
+        left: 15,
+        right: 15
     }
     IMGS_WALKING = [
         `img/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png`,
@@ -64,7 +64,7 @@ class JellyFish extends MovableObject {
                     this.movingDown = true;
                 }
             } else if (this.dead && this.y > 0) {
-                this.y -= 7;
+                this.y -= 5;
                 if (!this.soundPlayed) {
                     this.world.sound.jellyHurtSound.play();
                     this.soundPlayed = true;

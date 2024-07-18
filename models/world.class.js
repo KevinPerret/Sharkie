@@ -1,7 +1,7 @@
 class World {
     character = new Character(100);
-    statusbarLife = new StatusBarLife(10);
-    statusbarBoss = new StatusBarLife(560);
+    statusbarLife = new StatusBarLife(10, 0);
+    statusbarBoss = new StatusBarLife(560, 20);
     statusbarCoins = new StatusBarCoin();
     statusbarPoison = new StatusBarPoison();
     bubble = new Bubbles(0, -100, false);
@@ -19,19 +19,26 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.sound = sound;
-        this.draw();
+        this.gameLoop();
         this.setWorld();
-        this.run();
+
     }
 
- 
-  
+
+    gameLoop() {
+        if (!isPaused) {
+            // Deine Spiel-Update-Logik hier
+            this.run();
+            this.draw();
+        }
+        requestAnimationFrame(() => this.gameLoop());;
+    }
 
     run() {
         this.checkCollision();
         this.checkShooting();
         this.checkMeele();
-        requestAnimationFrame(() => this.run());
+
     }
 
     setWorld() {
@@ -106,13 +113,8 @@ class World {
                             this.statusbarBoss.setPercentBoss(enemy.health);
                         }
                     }
-
                 }
-            })
-
-                ;
-        } else {
-            console.log("Bubble is not defined.");
+            });
         }
     }
 
@@ -170,7 +172,7 @@ class World {
         this.addToMap(this.bubble);
 
 
-        requestAnimationFrame(() => this.draw());
+
     }
 
 
@@ -184,10 +186,10 @@ class World {
         if (mo) {
             if (mo.otherDirection) {
                 mo.drawMirrored(this.ctx);
-                mo.drawRectMirrored(this.ctx);
+                // mo.drawRectMirrored(this.ctx);
             } else {
                 mo.draw(this.ctx);
-                mo.drawRect(this.ctx);
+                // mo.drawRect(this.ctx);
             }
         }
     }

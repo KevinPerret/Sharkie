@@ -15,9 +15,9 @@
 <body>
     <div id="startscreen" class="startscreen">
         <div class="startLogoContainer">
-    </div>
+        </div>
         <img class="startBtn" onclick="startGame()" src="img/6.Botones/Start/1.png" alt="">
-       
+
     </div>
     <div id="noLandscape" class="noLandScape dNone">Please turn the Device</div>
     <main id="fullScreen">
@@ -29,13 +29,14 @@
         <div id="optionScreen" class="optionScreen dNone">
             <button id="closeBtn" class="closeBtn" onclick="toggleOptionScreen(),resumeGame()">X</button>
             <button id="fullScreenBtn" class="gameBtn" onclick="openFullscreen('fullScreen')">Full Screen</button>
-            <button id="restartBtn" class="gameBtn" >Instructions</button>
+            <button id="restartBtn" class="gameBtn">Instructions</button>
             <button id="muteBtn" class="gameBtn">Mute Sound</button>
         </div>
 
         <canvas id="canvas" width="720" height="480px"></canvas>
         <img id="optionBtn" class="optionBtn" onclick="toggleOptionScreen(), pauseGame()" src="img/options.png" alt="">
-        <img id="exitFullscreen" class="exitFullscreen dNone" onclick="exitFullscreen()" src="img/fullscreen-exit.svg" alt="">
+        <img id="exitFullscreen" class="exitFullscreen dNone" onclick="exitFullscreen()" src="img/fullscreen-exit.svg"
+            alt="">
         <img id="keyDown" class="keyDown" src="img/6.Botones/Key/keydown.png" alt="">
         <img id="keyUp" class="keyUp" src="img/6.Botones/Key/keyup.png" alt="">
         <img id="keyRight" class="keyRight" src="img/6.Botones/Key/keyright.png" alt="">
@@ -46,7 +47,7 @@
 </body>
 
 <script src="models/drawable-object.class.js"></script>
-<script src="models/movable-Object.class.js"></script>
+<script src="models/movable-object.class.js"></script>
 <script src="models/status-bar-life.class.js"></script>
 <script src="models/status-bar-coin.class.js"></script>
 <script src="models/status-bar-poison.class.js"></script>

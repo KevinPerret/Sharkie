@@ -7,10 +7,10 @@ class PufferFisch extends MovableObject {
   soundPlayed = false;
   dead = false;
   offset = {
-    top: 0,
+    top: 10,
     bottom: 25,
-    left: 0,
-    right: 0
+    left: 15,
+    right: 15
   }
 
   IMGS_IDLE = ['img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',

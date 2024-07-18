@@ -20,12 +20,12 @@ class StatusBarLife extends DraweableObject {
 
     percent = 100;
 
-    constructor(x) {
+    constructor(x,y) {
         super();
         this.loadImages(this.IMAGES_LIFE_YELLOW);
         this.loadImages(this.IMAGES_LIFE_ORANGE);
         this.x = x;
-        this.y = 0;
+        this.y = y;
         this.width = 150;
         this.height = 50;
         this.setPercent(100);

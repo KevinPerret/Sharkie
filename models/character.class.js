@@ -1,7 +1,7 @@
 class Character extends MovableObject {
     imgNr = 0;
     world;
-    speed = 10;
+    speed = 7;
 
     moving = false;
     isShooting = false;
@@ -13,7 +13,7 @@ class Character extends MovableObject {
     offset = {
         top: 95,
         bottom: 40,
-        left: 30,
+        left: 50,
         right: 30
     }
 
@@ -83,27 +83,27 @@ class Character extends MovableObject {
     ]
 
     IMGS_SLEEP = ['img/1.Sharkie/2.Long_IDLE/i1.png',
-        'img/1.Sharkie/2.Long_IDLE/i2.png',
-        'img/1.Sharkie/2.Long_IDLE/i3.png',
-        'img/1.Sharkie/2.Long_IDLE/i4.png',
-        'img/1.Sharkie/2.Long_IDLE/i5.png',
-        'img/1.Sharkie/2.Long_IDLE/i6.png',
-        'img/1.Sharkie/2.Long_IDLE/i7.png',
-        'img/1.Sharkie/2.Long_IDLE/i8.png',
-        'img/1.Sharkie/2.Long_IDLE/i9.png',
-        'img/1.Sharkie/2.Long_IDLE/i10.png',
-        'img/1.Sharkie/2.Long_IDLE/i11.png',
-        'img/1.Sharkie/2.Long_IDLE/i12.png',
-        'img/1.Sharkie/2.Long_IDLE/i13.png',
-        'img/1.Sharkie/2.Long_IDLE/i14.png',
-        'img/1.Sharkie/2.Long_IDLE/i12.png',
-        'img/1.Sharkie/2.Long_IDLE/i13.png',
-        'img/1.Sharkie/2.Long_IDLE/i14.png'
+        'img/1.Sharkie/2.Long_IDLE/I2.png',
+        'img/1.Sharkie/2.Long_IDLE/I3.png',
+        'img/1.Sharkie/2.Long_IDLE/I4.png',
+        'img/1.Sharkie/2.Long_IDLE/I5.png',
+        'img/1.Sharkie/2.Long_IDLE/I6.png',
+        'img/1.Sharkie/2.Long_IDLE/I7.png',
+        'img/1.Sharkie/2.Long_IDLE/I8.png',
+        'img/1.Sharkie/2.Long_IDLE/I9.png',
+        'img/1.Sharkie/2.Long_IDLE/I10.png',
+        'img/1.Sharkie/2.Long_IDLE/I11.png',
+        'img/1.Sharkie/2.Long_IDLE/I12.png',
+        'img/1.Sharkie/2.Long_IDLE/I13.png',
+        'img/1.Sharkie/2.Long_IDLE/I14.png',
+        'img/1.Sharkie/2.Long_IDLE/I12.png',
+        'img/1.Sharkie/2.Long_IDLE/I13.png',
+        'img/1.Sharkie/2.Long_IDLE/I14.png'
     ]
 
-    IMGS_SLEEPDEEP = ['img/1.Sharkie/2.Long_IDLE/i12.png',
-        'img/1.Sharkie/2.Long_IDLE/i13.png',
-        'img/1.Sharkie/2.Long_IDLE/i14.png'
+    IMGS_SLEEPDEEP = ['img/1.Sharkie/2.Long_IDLE/I12.png',
+        'img/1.Sharkie/2.Long_IDLE/I13.png',
+        'img/1.Sharkie/2.Long_IDLE/I14.png'
     ]
 
     IMGS_MEELE = ['img/1.Sharkie/4.Attack/Fin slap/1.png',
@@ -144,9 +144,9 @@ class Character extends MovableObject {
 
 
     setupMovement() {
-       const setMovementInterval= setInterval(() => {
+        const setMovementInterval = setInterval(() => {
             this.handleMovement();
-            this.updateCamera();   
+            this.updateCamera();
         }, 1000 / 60);
         addInterval(setMovementInterval);
     }
@@ -221,12 +221,12 @@ class Character extends MovableObject {
                     gameStarted = false;
                     this.x = 200;
                     toggleGameOverScreen();
-             
+
                 }
                 clearInterval(intervall);
 
             }
-            this.world.sound.deadSound.play();  
+            this.world.sound.deadSound.play();
         } else if (this.moving && !this.isHurt() && !this.isShooting && !this.isAttacking) {
             this.playAnimation(this.IMGS_SWIM);
         } else if (idle && !this.isHurt()) {
@@ -285,7 +285,7 @@ class Character extends MovableObject {
     }
 
     sinking() {
-       const sinkingInterval= setInterval(() => {
+        const sinkingInterval = setInterval(() => {
             if (this.y < 300 && !this.moving) {
                 this.y += 0.15;
             }
@@ -295,7 +295,7 @@ class Character extends MovableObject {
     }
 
     animateSwim() {
-      const swimInterval=  setInterval(() => {
+        const swimInterval = setInterval(() => {
             if (this.moving) {
                 this.world.sound.swimmingSound.play();
 

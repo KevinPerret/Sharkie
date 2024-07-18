@@ -63,7 +63,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMGS_BOSSDEAD);
         this.height = 380;
         this.width = 380;
-        this.x = 5600;
+        this.x = 5200;
         this.y = 0;
         this.speed = 0.15 + Math.random() * 0.25;
         this.animate();
@@ -73,7 +73,7 @@ class Endboss extends MovableObject {
     animate() {
         const animateBoss = setInterval(() => {
             if (gameStarted) {
-                if (this.world.character.x >= 5200 && !firstContact) {
+                if (this.world.character.x >= 4800 && !firstContact) {
                     this.playAnimation(this.IMGS_INTRODUCE);
                     if (this.lastImg) {
                         firstContact = true;
@@ -85,7 +85,8 @@ class Endboss extends MovableObject {
                 } else if (this.isDead) {
                     this.playAnimation(this.IMGS_BOSSDEAD);
                     if (this.lastImg) {
-                        clearInterval(test);
+                        clearInterval(animateBoss);
+                        this.winScreen();
                     }
                 }
             }
@@ -105,8 +106,15 @@ class Endboss extends MovableObject {
         if (this.health <= 0) {
             this.isDead = true;
             this.world.sound.bossDeadSound.play();
-            win = true;  
-            toggleGameOverScreen(win);    
         }
+    }
+
+    winScreen(){
+        setTimeout(() => {
+            win = true;  
+            stopAllIntervals();
+            toggleGameOverScreen(win);     
+        }, 1000);
+          
     }
 }

@@ -41,7 +41,7 @@ class MovableObject extends DraweableObject {
   addPoison() {
     let currentTime = new Date().getTime();
     if (currentTime - this.lastHitPoison >= 1000 && !this.iframes) {
-      this.poisonLevel += 50;
+      this.poisonLevel += 60;
       if (this.poisonLevel > 100) {
         this.energie -= 20;
         this.poisonLevel = 0;
