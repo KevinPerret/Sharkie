@@ -7,11 +7,19 @@ class DraweableObject {
   height = 100;
   lastImg = false;
 
+  /**
+   * Loads an image from the specified path and sets it as the current image.
+   * @param {string} path - The path to the image file.
+   */
   loadImage(path) {
     this.img = new Image();
     this.img.src = path;
   }
 
+  /**
+  * Loads multiple images from an array of paths and caches them.
+  * @param {string[]} arr - An array of image paths to load and cache.
+  */
   loadImages(arr) {
     arr.forEach((path) => {
       let img = new Image();
@@ -20,67 +28,35 @@ class DraweableObject {
     });
   }
 
+  /**
+  * Draws the current image onto the given canvas context.
+  * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
+  */
   draw(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
-
+  /**
+  * Plays an animation by cycling through an array of image paths.
+  * Updates the current image and tracks whether the last image in the array has been reached.
+  * @param {string[]} IMGS - An array of image paths representing the animation frames.
+  */
   playAnimation(IMGS) {
     let i = this.imgNr % IMGS.length;
     let path = IMGS[i];
     this.img = this.imgCache[path];
     this.imgNr++;
-    if (i == IMGS.length - 1) {
-      this.lastImg = true;
-    } else {
-      this.lastImg = false;
-    }
+    this.lastImg = (i === IMGS.length - 1);
   }
 
-  drawRect(ctx) {
-   
-      ctx.beginPath();
-      ctx.lineWidth = "2";
-      ctx.strokeStyle = "red";
-      if (this instanceof Character) {
-        ctx.rect(this.x + 35, this.y +100, this.width -60, this.height - 140);
-
-      } else if (this instanceof PufferFisch) {
-        ctx.rect(this.x, this.y, this.width, this.height - 25);
-      }
-      else if (this instanceof Endboss) {
-        ctx.rect(this.x, this.y + 170, this.width, this.height - 200);
-      } else {
-        ctx.rect(this.x, this.y, this.width, this.height);
-      }
-      ctx.stroke();
-    
-  }
-
+  /**
+  * Draws the current image on the canvas context with horizontal mirroring.
+  * @param {CanvasRenderingContext2D} ctx - The canvas rendering context to draw on.
+  */
   drawMirrored(ctx) {
     ctx.save();
     ctx.scale(-1, 1);
-  
-      ctx.drawImage(this.img, -this.x - this.width, this.y, this.width, this.height);
-    
+    ctx.drawImage(this.img, -this.x - this.width, this.y, this.width, this.height);
     ctx.restore();
-
   }
-
-  drawRectMirrored(ctx) {
-    ctx.beginPath();
-    ctx.lineWidth = "2";
-    ctx.strokeStyle = "red";
-    if (this instanceof Character) {
-      ctx.rect(this.x + 35, this.y + 100, this.width - 60, this.height - 140);
-    }else  if (this instanceof PufferFisch) {
-      ctx.rect(this.x, this.y, this.width, this.height - 25);
-    } else {
-      ctx.rect(this.x, this.y, this.width, this.height);
-    }
-    ctx.stroke();
-  }
-
-
-
 }

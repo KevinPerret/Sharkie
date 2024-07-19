@@ -1,29 +1,10 @@
 class StatusBarLife extends DraweableObject {
-
-    IMAGES_LIFE_YELLOW = ['img/4. Marcadores/green/Life/0.png',
-        'img/4. Marcadores/green/Life/20.png',
-        'img/4. Marcadores/green/Life/40.png',
-        'img/4. Marcadores/green/Life/60.png',
-        'img/4. Marcadores/green/Life/80.png',
-        'img/4. Marcadores/green/Life/100.png'
-    ];
-
-    IMAGES_LIFE_ORANGE =['img/4. Marcadores/orange/0_ Life.png',
-        'img/4. Marcadores/orange/20_ Life.png',
-        'img/4. Marcadores/orange/40_ Life.png',
-        'img/4. Marcadores/orange/60_ Life.png',
-        'img/4. Marcadores/orange/80_ Life.png',
-        'img/4. Marcadores/orange/100_ Life.png'
-    ]
-
-
-
     percent = 100;
 
-    constructor(x,y) {
+    constructor(x, y) {
         super();
-        this.loadImages(this.IMAGES_LIFE_YELLOW);
-        this.loadImages(this.IMAGES_LIFE_ORANGE);
+        this.loadImages(IMAGES_LIFE_YELLOW);
+        this.loadImages(IMAGES_LIFE_ORANGE);
         this.x = x;
         this.y = y;
         this.width = 150;
@@ -31,18 +12,31 @@ class StatusBarLife extends DraweableObject {
         this.setPercent(100);
     }
 
+    /**
+     * Sets the percentage value and updates the image based on that percentage.
+     * @param {number} percent - The percentage value to set (0 to 100).
+     */
     setPercent(percent) {
         this.percent = percent;
-        let imgPath = this.IMAGES_LIFE_YELLOW[this.resolveImgIndex()];
+        let imgPath = IMAGES_LIFE_YELLOW[this.resolveImgIndex()];
         this.img = this.imgCache[imgPath];
     }
 
+    /**
+     * Sets the percentage value for the boss and updates the image based on that percentage.
+     * The percentage for the boss is doubled.
+     * @param {number} percent - The percentage value to set (0 to 100).
+     */
     setPercentBoss(percent) {
-        this.percent = percent;
-        let imgPath = this.IMAGES_LIFE_ORANGE[this.resolveImgIndex()];
+        this.percent = percent * 2;
+        let imgPath = IMAGES_LIFE_ORANGE[this.resolveImgIndex()];
         this.img = this.imgCache[imgPath];
     }
 
+    /**
+     * Resolves the image index based on the current percentage value.
+     * @returns {number} The index of the image corresponding to the percentage range.
+     */
     resolveImgIndex() {
 
         if (this.percent == 100) {

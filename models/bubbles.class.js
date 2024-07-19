@@ -6,7 +6,6 @@ class Bubbles extends MovableObject {
         left: 0,
         right: 0
     }
-  
 
     constructor(x, y, otherDirection) {
         super().loadImage('img/1.Sharkie/4.Attack/Bubble trap/Bubble.png');
@@ -19,8 +18,12 @@ class Bubbles extends MovableObject {
         this.shootBubble();
     }
 
+    /**
+     * Launches a bubble in the direction the boss is facing.
+     * The bubble moves diagonally based on the boss's direction and speed.
+     */
     shootBubble() {
-       const shootBubbleInterval = setInterval(() => {
+        const shootBubbleInterval = setInterval(() => {
             if (this.otherDirection == true) {
                 this.y += this.speed / 2;
                 this.x += this.speed;
@@ -31,7 +34,5 @@ class Bubbles extends MovableObject {
         }, 50);
         addInterval(shootBubbleInterval);
     }
-   
-    
 }
 

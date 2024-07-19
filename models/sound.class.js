@@ -1,5 +1,11 @@
+/**
+ * Manages sound effects and background music for the game.
+ */
 class Sound {
 
+  /**
+   * Initializes the Sound class by setting up all audio sources and mute button.
+   */
   constructor() {
     this.bossHurtSound = new Audio('audio/bosshurt.mp3');
     this.bossDeadSound = new Audio('audio/bossdead.mp3');
@@ -14,7 +20,9 @@ class Sound {
     this.pufferHurtSound = new Audio('audio/pufferhurt.mp3');
     this.collectSound = new Audio('audio/coin.mp3');
     this.backgroundSound = new Audio('audio/bgmusic.mp3');
-
+    this.bossAttackSound = new Audio('audio/bossAttack.mp3');
+    this.winSound = new Audio('audio/win.mp3');
+    this.gameOverSound = new Audio('audio/gameover.mp3');
 
     this.allAudios = [
       this.bossHurtSound,
@@ -28,54 +36,75 @@ class Sound {
       this.meeleSound,
       this.jellyHurtSound,
       this.collectSound,
-      this.pufferHurtSound
-
+      this.pufferHurtSound,
+      this.bossAttackSound,
+      this.winSound,
+      this.gameOverSound
     ];
-    this.setVolume(0.1);
-    this.muteAudio();
 
+    this.isMuted = false;
+    this.muteBtn = document.querySelector('#muteBtn');
+    this.setVolume(0.08);
+    this.initMuteButton();
   }
 
-
-
+  /**
+   * Starts playing the background music and sets it to loop.
+   */
   startBackgroundMusic() {
     this.backgroundSound.play();
     this.backgroundSound.volume = 0.03;
     this.backgroundSound.loop = true;
   }
 
+  /**
+   * Sets the volume for all audio elements.
+   * @param {number} volume - The volume level to set (0 to 1).
+   */
   setVolume(volume) {
     this.allAudios.forEach((audio) => {
       audio.volume = volume;
     });
   }
 
-  muteAudio() {
-    let muteBtn = document.querySelector('#muteBtn');
-    let isMuted = false;
-    if (muteBtn) {
-      muteBtn.addEventListener('click', () => {
-        if (!isMuted) {
-          this.allAudios.forEach((audio) => {
-            audio.volume = 0;
-          });
-          this.backgroundSound.volume = 0;
-          isMuted = true;
-        }
-        else {
-          this.allAudios.forEach((audio) => {
-            audio.volume = 0.1;
-          })
-          this.backgroundSound.volume = 0.03;
-          isMuted = false;
-        }
-      });
+  /**
+   * Initializes the mute button and sets up the click event listener.
+   */
+  initMuteButton() {
+    if (this.muteBtn) {
+      this.muteBtn.addEventListener('click', () => this.toggleMute());
     }
   }
 
-  unmuteAudio() {
-    this.allAudios.forEach((audio) => {
-      audio.volume = 0.1;
-    });
+  /**
+   * Toggles the mute state between muted and unmuted.
+   */
+  toggleMute() {
+    this.isMuted ? this.unmute() : this.mute();
+  }
+
+  /**
+   * Mutes all audio elements.
+   */
+  mute() {
+    this.setAudioVolume(0);
+    this.isMuted = true;
+  }
+
+  /**
+   * Unmutes all audio elements.
+   */
+  unmute() {
+    this.setAudioVolume(0.1);
+    this.isMuted = false;
+  }
+
+  /**
+   * Sets the volume for all audio elements and adjusts the background sound accordingly.
+   * @param {number} volume - The volume level to set (0 to 1).
+   */
+  setAudioVolume(volume) {
+    this.allAudios.forEach(audio => audio.volume = volume);
+    this.backgroundSound.volume = volume === 0 ? 0 : 0.03;
   }
 }

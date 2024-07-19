@@ -1,18 +1,9 @@
 class StatusBarPoison extends DraweableObject {
-    IMAGES_POISON = ['img/4. Marcadores/green/poisoned bubbles/0_ copia 2.png',
-        'img/4. Marcadores/green/poisoned bubbles/20_ copia 3.png',
-        'img/4. Marcadores/green/poisoned bubbles/40_ copia 2.png',
-        'img/4. Marcadores/green/poisoned bubbles/60_ copia 2.png',
-        'img/4. Marcadores/green/poisoned bubbles/80_ copia 2.png',
-        'img/4. Marcadores/green/poisoned bubbles/100_ copia 3.png'
-    ];
-
-
     percentPoison = 0;
 
     constructor() {
         super();
-        this.loadImages(this.IMAGES_POISON);
+        this.loadImages(IMAGES_POISON);
         this.x = 10;
         this.y = 80;
         this.width = 150;
@@ -20,11 +11,20 @@ class StatusBarPoison extends DraweableObject {
         this.setPercentPoison(0);
     }
 
+    /**
+    * Sets the poison percentage and updates the status bar image accordingly.
+    * @param {number} percentPoison - The percentage of poison to set.
+    */
     setPercentPoison(percentPoison) {
         this.percentPoison = percentPoison;
-        let imgPath = this.IMAGES_POISON[this.resolvePoisonImgIndex()];	
+        let imgPath = IMAGES_POISON[this.resolvePoisonImgIndex()];
         this.img = this.imgCache[imgPath];
     }
+
+    /**
+     * Resolves the appropriate poison image index based on the current poison percentage.
+     * @returns {number} The index of the poison image to use.
+     */
     resolvePoisonImgIndex() {
         if (this.percentPoison == 100) {
             return 5;

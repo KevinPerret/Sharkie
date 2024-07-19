@@ -1,38 +1,39 @@
-class Coins extends DraweableObject{
-    imgNr = 1;
-
-    offset = {
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0
+class Coins extends DraweableObject {
+  imgNr = 1;
+  offset = {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   }
 
-IMGS_COINS=['img/4. Marcadores/1. Coins/1.png',
-    'img/4. Marcadores/1. Coins/2.png',
-    'img/4. Marcadores/1. Coins/3.png',
-    'img/4. Marcadores/1. Coins/4.png'
-]
-    constructor(x,y){
-        super();
-        this.loadImage(`img/4. Marcadores/1. Coins/1.png`);
-        this.loadImages(this.IMGS_COINS);
-        this.x = x
-        this.y = y;
-        this.width = 50;
-        this.height = 50;
-      this.animateCoins();
-    }
+  constructor(x, y) {
+    super();
+    this.loadImage(`img/4. Marcadores/1. Coins/1.png`);
+    this.loadImages(IMGS_COIN);
+    this.x = x
+    this.y = y;
+    this.width = 50;
+    this.height = 50;
+    this.animateCoins();
+  }
 
-    animateCoins(){
-       const animateCoinsInterval= setInterval(() => {
-      this.playAnimation(this.IMGS_COINS)
-    },100)
+  /**
+   * Animates the coin by cycling through its animation frames.
+   * The animation is updated every 100 milliseconds.
+   */
+  animateCoins() {
+    const animateCoinsInterval = setInterval(() => {
+      this.playAnimation(IMGS_COIN);
+    }, 100);
+
     addInterval(animateCoinsInterval);
+  }
 
-    }
-   collected(){
-      this.world.sound.collectSound.play();
-    
-   }
+  /**
+  * Plays a sound effect when the coin is collected.
+  */
+  collected() {
+    this.world.sound.collectSound.play();
+  }
 }

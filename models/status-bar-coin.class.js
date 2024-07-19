@@ -1,19 +1,9 @@
 class StatusBarCoin extends DraweableObject {
+    percentCoin = 0;
 
-   
-    IMAGES_COINS=['img/4. Marcadores/green/Coin/0_  copia 4.png',
-        'img/4. Marcadores/green/Coin/20_  copia 2.png',
-        'img/4. Marcadores/green/Coin/40_  copia 4.png',
-        'img/4. Marcadores/green/Coin/60_  copia 4.png',
-        'img/4. Marcadores/green/Coin/80_  copia 4.png',
-        'img/4. Marcadores/green/Coin/100_ copia 4.png'
-    ];
-
-percentCoin = 0;
-
-    constructor(){
+    constructor() {
         super();
-        this.loadImages(this.IMAGES_COINS);
+        this.loadImages(IMAGES_COINS);
         this.x = 10;
         this.y = 40;
         this.width = 150;
@@ -21,11 +11,22 @@ percentCoin = 0;
         this.setPercentCoin(0);
     }
 
-    setPercentCoin(percentCoin){
-        let imgPath = this.IMAGES_COINS[this.resolveCoinImgIndex(percentCoin)];
+    /**
+     * Sets the image for the coin based on the given percentage.
+     * Updates the current image to reflect the state of the coin according to its percentage.
+     * @param {number} percentCoin - The percentage value representing the coin's state (0 to 100).
+     */
+    setPercentCoin(percentCoin) {
+        let imgPath = IMAGES_COINS[this.resolveCoinImgIndex(percentCoin)];
         this.img = this.imgCache[imgPath];
-        }
+    }
 
+    /**
+     * Resolves the image index based on the given percentage for the coin.
+     * Determines which image to use from the `IMAGES_COINS` array based on the percentage range.
+     * @param {number} percentCoin - The percentage value representing the coin's state (0 to 100).
+     * @returns {number} The index of the image corresponding to the percentage range.
+     */
     resolveCoinImgIndex(percentCoin) {
         if (percentCoin >= 100) {
             return 5;
@@ -37,9 +38,10 @@ percentCoin = 0;
             return 2;
         } else if (percentCoin > 0) {
             return 1;
-        } else if (percentCoin == 0) {
+        } else if (percentCoin === 0) {
             return 0;
-        };
+        }
     }
+
 
 }

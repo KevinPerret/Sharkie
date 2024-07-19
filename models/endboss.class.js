@@ -2,119 +2,314 @@ class Endboss extends MovableObject {
     world;
     hurt = false;
     imgNr = 1;
-    health = 100;
+    health = 50;
     isDead = false;
     offset = {
         top: 200,
         bottom: 80,
-        left: 10,
-        right: 10
+        left: 40,
+        right: 40
     }
-   
+    lastAttackTime = 0;
+    attackCooldown = 5000; // 3 Sekunden
+    isAttacking = false;
+    allowAtack = false;
 
-
-    IMGS_INTRODUCE = [
-        `img/2.Enemy/3 Final Enemy/1.Introduce/1.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/2.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/3.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/4.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/5.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/6.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/7.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/8.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/9.png`,
-        `img/2.Enemy/3 Final Enemy/1.Introduce/10.png`
-    ];
-
-    IMGS_FLOATING = [
-        'img/2.Enemy/3 Final Enemy/2.floating/1.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/2.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/3.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/4.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/5.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/6.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/7.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/8.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/9.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/10.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/11.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/12.png',
-        'img/2.Enemy/3 Final Enemy/2.floating/13.png'
-    ]
-
-    IMGS_HURT = ['img/2.Enemy/3 Final Enemy/Hurt/1.png',
-        'img/2.Enemy/3 Final Enemy/Hurt/2.png',
-        'img/2.Enemy/3 Final Enemy/Hurt/3.png',
-        'img/2.Enemy/3 Final Enemy/Hurt/4.png',
-    ]
-
-    IMGS_BOSSDEAD = ['img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 6.png',
-        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 7.png',
-        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 8.png',
-        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 9.png',
-        'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 10.png',
-    ]
     constructor() {
         super();
         this.loadImage(`img/2.Enemy/3 Final Enemy/1.Introduce/1.png`);
-        this.loadImages(this.IMGS_INTRODUCE);
-        this.loadImages(this.IMGS_FLOATING);
-        this.loadImages(this.IMGS_HURT);
-        this.loadImages(this.IMGS_BOSSDEAD);
+        this.loadImages(IMGS_INTRODUCE);
+        this.loadImages(IMGS_FLOATING);
+        this.loadImages(IMGS_HURT);
+        this.loadImages(IMGS_BOSSDEAD);
+        this.loadImages(IMGS_ATTACK);
         this.height = 380;
         this.width = 380;
         this.x = 5200;
         this.y = 0;
-        this.speed = 0.15 + Math.random() * 0.25;
+        this.speed = 8;
         this.animate();
+        this.originalSpeed = this.speed;
+        this.invulnerable = false;
+        this.invulnerabilityDuration = 2000;
     }
 
-
+    /**
+     * Animates the boss character by handling different states and animations.
+     */
     animate() {
         const animateBoss = setInterval(() => {
-            if (gameStarted) {
+            if (gameStarted && !isPaused) {
                 if (this.world.character.x >= 4800 && !firstContact) {
-                    this.playAnimation(this.IMGS_INTRODUCE);
-                    if (this.lastImg) {
-                        firstContact = true;
-                    }
+                    this.playIntroduce();
                 } else if (firstContact && !this.hurt && !this.isDead) {
-                    this.playAnimation(this.IMGS_FLOATING);
+                    this.animateAttack();
                 } else if (this.hurt && !this.isDead) {
-                    this.playAnimation(this.IMGS_HURT);
+                    this.playAnimation(IMGS_HURT);
                 } else if (this.isDead) {
-                    this.playAnimation(this.IMGS_BOSSDEAD);
-                    if (this.lastImg) {
-                        clearInterval(animateBoss);
-                        this.winScreen();
-                    }
+                    this.animateDead(animateBoss);
                 }
             }
         }, 1000 / 10);
-       addInterval(animateBoss);
-
+        addInterval(animateBoss);
     }
 
-    hitByPlayer() {
-        this.health -= 10;
-        this.hurt = true;
-        this.world.sound.bossHurtSound.play();
-
-        setTimeout(() => {
-            this.hurt = false;
-        }, 1000);
-        if (this.health <= 0) {
-            this.isDead = true;
-            this.world.sound.bossDeadSound.play();
+    /**
+     * Plays the introduction animation and sets up attack delay after first contact.
+     */
+    playIntroduce() {
+        this.playAnimation(IMGS_INTRODUCE);
+        if (this.lastImg) {
+            this.delayAttack();
         }
     }
 
-    winScreen(){
+    /**
+     * Sets a delay before allowing the boss to attack.
+     */
+    delayAttack() {
+        firstContact = true;
         setTimeout(() => {
-            win = true;  
+            this.allowAtack = true;
+        }, 2000);
+    }
+
+    /**
+     * Handles the attack animation and movement of the boss.
+     */
+    animateAttack() {
+        if (this.isAttacking) {
+            this.playAnimation(IMGS_ATTACK);
+            if (this.lastImg) {
+                this.isAttacking = false;
+                this.speed = this.originalSpeed;
+            }
+        } else {
+            this.playAnimation(IMGS_FLOATING);
+            this.moveToCharacter();
+        }
+    }
+
+    /**
+     * Handles the death animation and triggers the win screen.
+     * @param {number} animateBoss - The interval ID for animation.
+     */
+    animateDead(animateBoss) {
+        this.playAnimation(IMGS_BOSSDEAD);
+        if (this.lastImg) {
+            clearInterval(animateBoss);
+            this.winScreen();
+        }
+    }
+
+    /**
+    * Moves the boss towards the character and attempts to attack if close enough.
+    */
+    moveToCharacter() {
+        let character = this.world.character;
+        if (!this.isAttacking) {
+            this.moveHorizontallyTowards(character);
+            this.moveVerticallyTowards(character);
+        }
+        if (this.isCloseTo(character) && this.allowAtack) {
+            this.tryAttack(character);
+        }
+    }
+
+    /**
+     * Moves the boss horizontally towards the character.
+     * @param {Object} character - The character object to move towards.
+     */
+    moveHorizontallyTowards(character) {
+        if (this.x < character.x - character.width) {
+            this.moveRight();
+            this.otherDirection = true;
+        } else if (this.x > character.x) {
+            this.moveLeft();
+            this.otherDirection = false;
+        }
+    }
+
+    /**
+     * Moves the boss vertically towards the character.
+     * @param {Object} character - The character object to move towards.
+     */
+    moveVerticallyTowards(character) {
+        if (this.y < character.y - character.height) {
+            this.moveDown();
+        } else if (this.y > character.y - character.height && this.y > -120) {
+            this.moveUp();
+        }
+    }
+
+    /**
+     * Checks if the boss is close enough to the character to attack.
+     * @param {Object} character - The character object to check proximity with.
+     * @returns {boolean} True if the boss is close enough to the character, otherwise false.
+     */
+    isCloseTo(character) {
+        let distanceX;
+        if (!this.otherDirection) {
+            distanceX = Math.abs(this.x - character.x);
+        } else distanceX = Math.abs(this.x + 200 - character.x);
+        return distanceX < 350;
+    }
+
+    /**
+     * Attempts to perform an attack if the cooldown period has passed.
+     */
+    tryAttack() {
+        const currentTime = new Date().getTime();
+
+        if (currentTime - this.lastAttackTime >= this.attackCooldown && !this.isAttacking && !this.hurt) {
+            this.lastAttackTime = currentTime;
+            this.isAttacking = true;
+            this.attack();
+        }
+    }
+
+    /**
+     * Initiates the attack sequence for the character.
+     */
+    attack() {
+        this.speed = 10;
+        this.startAttackInterval();
+        this.endAttackAfterDelay(700);
+    }
+
+    /**
+     * Starts the interval for the attack movement.
+     */
+    startAttackInterval() {
+        let attackInterval = setInterval(() => {
+            this.performAttackMovement();
+            this.moveToCharacter();
+        }, 1000 / 60);
+        this.attackInterval = attackInterval;
+    }
+
+    /**
+     * Performs the attack movement based on the direction.
+     */
+    performAttackMovement() {
+        if (this.otherDirection) {
+            this.moveRight();
+        } else {
+            this.moveLeft();
+        }
+        this.playAttackSound();
+    }
+
+    /**
+     * Plays the attack sound.
+     */
+    playAttackSound() {
+        this.world.sound.bossAttackSound.play();
+    }
+
+    /**
+     * Ends the attack sequence after a specified delay.
+     * @param {number} delay - The delay in milliseconds.
+     */
+    endAttackAfterDelay(delay) {
+        setTimeout(() => {
+            this.stopAttack();
+        }, delay);
+    }
+
+    /**
+     * Stops the attack and resets the character's state.
+     */
+    stopAttack() {
+        clearInterval(this.attackInterval);
+        this.isAttacking = false;
+        this.speed = this.originalSpeed;
+    }
+    /**
+    * Handles the event when the character is hit by the player.
+    */
+    hitByPlayer() {
+        if (this.invulnerable) {
+            return;
+        }
+        this.applyDamage(10);
+        this.playHurtSound();
+        this.setInvulnerability(true);
+        this.resetHurtStateAfterDelay(1000);
+        this.removeInvulnerabilityAfterDelay(this.invulnerabilityDuration);
+        this.checkDeath();
+    }
+
+    /**
+     * Applies damage to the character.
+     * @param {number} damage - The amount of damage to apply.
+     */
+    applyDamage(damage) {
+        this.health -= damage;
+        this.hurt = true;
+    }
+
+    /**
+     * Plays the hurt sound for the character.
+     */
+    playHurtSound() {
+        this.world.sound.bossHurtSound.play();
+    }
+
+    /**
+     * Sets the invulnerability state of the character.
+     * @param {boolean} state - The invulnerability state to set.
+     */
+    setInvulnerability(state) {
+        this.invulnerable = state;
+    }
+
+    /**
+     * Resets the hurt state of the character after a delay.
+     * @param {number} delay - The delay in milliseconds.
+     */
+    resetHurtStateAfterDelay(delay) {
+        setTimeout(() => {
+            this.hurt = false;
+        }, delay);
+    }
+
+    /**
+     * Removes the invulnerability state of the character after a delay.
+     * @param {number} delay - The delay in milliseconds.
+     */
+    removeInvulnerabilityAfterDelay(delay) {
+        setTimeout(() => {
+            this.invulnerable = false;
+        }, delay);
+    }
+
+    /**
+     * Checks if the character's health is zero or below and handles death.
+     */
+    checkDeath() {
+        if (this.health <= 0) {
+            this.handleDeath();
+        }
+    }
+
+    /**
+     * Handles the death of the character.
+     */
+    handleDeath() {
+        this.isDead = true;
+        this.world.sound.bossDeadSound.play();
+    }
+
+    /**
+     * Show the Winscreen and stop all intervals
+     */
+    winScreen() {
+        setTimeout(() => {
+            win = true;
+            this.world.sound.winSound.play();
             stopAllIntervals();
-            toggleGameOverScreen(win);     
+            toggleGameOverScreen(win);
         }, 1000);
-          
     }
 }
